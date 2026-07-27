@@ -21,4 +21,5 @@ export const validationSchema = Joi.object({
     .valid(...Object.values(Environment))
     .default(Environment.Development),
   PORT: Joi.number().default(5000),
+  fallbackLanguage: Joi.string().default('ar'),
 });

@@ -10,4 +10,5 @@
 export interface EnvironmentVariables {
   // NODE_ENV: Environment;
   PORT: number;
+  fallbackLanguage: string;
 }

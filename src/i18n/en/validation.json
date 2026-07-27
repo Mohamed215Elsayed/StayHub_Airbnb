@@ -1,0 +1,6 @@
+{
+  "IS_STRING": "The value must be a string.",
+  "NOT_EMPTY": "This field is required.",
+  "IS_EMAIL": "Please enter a valid email address.",
+  "NOT_FOUND": "The requested item was not found."
+}

@@ -1,98 +1,166 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# StayHub — Airbnb Clone API
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+A production-style backend for an Airbnb-inspired booking platform, built with **NestJS**, **MongoDB**, and **Clean Architecture** principles.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+This isn't a small CRUD demo — it's a real API with authentication, role-based authorization, file uploads, bookings, reviews, OTP flows, internationalized error handling, and local infrastructure via Docker.
 
-## Description
+## ✨ Features
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+- **Authentication & Authorization** — register, login, refresh tokens, current-account endpoint, role-based access control (users & system admins)
+- **User Management** — secure password hashing, profile management
+- **Units / Listings** — create, update, delete, activate/deactivate with owner-level authorization
+- **File Uploads** — unit photo upload/update/delete with validation by size, extension, and file signature; S3-compatible storage (MinIO locally)
+- **Bookings** — availability checks, price calculation, guest/host actions, cancellation flows
+- **Reviews & Ratings** — booking reviews, unit review aggregation
+- **Favorites** — save and manage favorite units
+- **OTP & Forgot Password** — OTP generation/verification, email integration via an adapter pattern (Nodemailer)
+- **Global Exception Handling** — centralized custom exceptions with translated error messages (`nestjs-i18n`)
+- **Validation** — DTO validation and response transformation (`class-validator`, `class-transformer`)
+- **API Documentation** — Swagger
+- **Local Infrastructure** — MongoDB, MinIO, and Mailpit via Docker Compose
 
-## Project setup
+## 🏗️ Architecture
 
-```bash
-$ pnpm install
-```
+- Clean, use-case based application structure
+- Thin controllers — business logic lives in services/use-cases
+- Reusable base repository pattern for MongoDB
+- Modules communicate through well-defined boundaries (no leaking database logic across layers)
 
-## Compile and run the project
+## 🧰 Tech Stack
 
-```bash
-# development
-$ pnpm run start
+| Layer | Technology |
+|---|---|
+| Framework | NestJS |
+| Database | MongoDB |
+| Validation | class-validator, class-transformer, Joi |
+| i18n | nestjs-i18n |
+| File Storage | S3-compatible (MinIO for local dev) |
+| Email Testing | Mailpit |
+| Package Manager | pnpm |
+| Node Version Manager | fnm |
+| API Docs | Swagger |
+| API Testing | Bruno (`air-bnb-collection`) |
 
-# watch mode
-$ pnpm run start:dev
+## ✅ Prerequisites
 
-# production mode
-$ pnpm run start:prod
-```
+- [Node.js](https://nodejs.org/) — managed via [fnm](https://github.com/Schniz/fnm)
+- [pnpm](https://pnpm.io/)
+- [Docker](https://www.docker.com/) & Docker Compose
 
-## Run tests
+## 🚀 Getting Started
 
-```bash
-# unit tests
-$ pnpm run test
-
-# e2e tests
-$ pnpm run test:e2e
-
-# test coverage
-$ pnpm run test:cov
-```
-
-## Deployment
-
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
-
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+### 1. Clone the repository
 
 ```bash
-$ pnpm install -g @nestjs/mau
-$ mau deploy
+git clone <repo-url>
+cd stayhub_airbnb
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+### 2. Install dependencies
 
-## Resources
+```bash
+pnpm install
+```
 
-Check out a few resources that may come in handy when working with NestJS:
+### 3. Set up environment variables
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+Copy the example environment file and fill in your own values:
 
-## Support
+```bash
+cp .env.example .env.development
+```
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+### 4. Start local infrastructure (MongoDB, MinIO, Mailpit)
 
-## Stay in touch
+```bash
+docker compose up -d
+```
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+### 5. Run the app
 
-## License
+```bash
+pnpm run start:dev
+```
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+The API will be available at `http://localhost:<PORT>` (see `.env` for the configured port).
+
+Swagger docs available at `http://localhost:<PORT>/api` (adjust path if different in your setup).
+
+## 📂 Project Structure
+
+```
+src/
+├── common/              → Shared building blocks (filters, exceptions, guards, pipes, config)
+├── modules/             → Feature modules (users, units, bookings, reviews, favorites, otp, ...)
+├── i18n/                → Translation resources (ar/en)
+└── main.ts              → Application bootstrap
+```
+
+## 🧪 Useful Commands
+
+### Development
+
+```bash
+pnpm run start:dev        # Start in watch mode
+pnpm run build             # Build the project
+npx tsc --noEmit           # Type-check without emitting files
+npx tsc --version           # Check installed TypeScript version
+```
+
+### Generating a Resource
+
+```bash
+nest g resource modules/<name>
+```
+
+### Docker
+
+```bash
+docker compose up -d       # Start MongoDB, MinIO, Mailpit
+docker compose down         # Stop all services
+```
+
+### Dependency Management
+
+```bash
+pnpm i --save @nestjs/config
+pnpm i --save class-validator class-transformer
+pnpm install --save nestjs-i18n
+pnpm install tsx --save-dev
+npm install joi
+npm i --save-dev @types/node
+```
+
+### Clean Reinstall (if dependencies get into a bad state)
+
+```bash
+Remove-Item -Recurse -Force node_modules
+Remove-Item pnpm-lock.yaml
+pnpm install
+```
+
+## ⚙️ Configuration Notes
+
+- Environment variables are validated at startup via a Joi schema (fail-fast on misconfiguration).
+- `NODE_ENV` is strongly typed via an `Environment` enum, shared across the config layer for compile-time safety.
+- If you hit a `baseUrl is deprecated` warning on newer TypeScript versions, add the following inside `compilerOptions` in `tsconfig.json`, right after `"baseUrl": "./"`:
+
+```jsonc
+"ignoreDeprecations": "6.0"
+```
+
+## 🌍 Internationalization
+
+Error and validation messages are translated via `nestjs-i18n`. Translation resources live under `src/i18n/<lang>/`. Supported languages: Arabic (`ar`), English (`en`).
+
+## 🛡️ Error Handling
+
+All exceptions are caught by a global exception filter and normalized into a consistent response shape, with translated messages based on the request's language.
+
+## 📮 API Testing
+
+A ready-to-use [Bruno](https://www.usebruno.com/) collection is available under `air-bnb-collection/` for testing all API flows locally.
+
+## 📄 License
+
+This project is for educational purposes as part of a backend development course.

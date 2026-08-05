@@ -1,0 +1,11 @@
+services:
+  mongodb:
+    image: mongo:8.3
+    container_name: Stayhub_MongoDB
+    ports:
+      - "27018:27017"
+    volumes:
+      - mongodb_data:/data/db
+
+volumes:
+  mongodb_data:

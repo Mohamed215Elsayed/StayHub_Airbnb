@@ -3,10 +3,11 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
 import { UsersModule } from '@modules/users/users.module';
-import { JwtModule } from '@nestjs/jwt';
+import { JwtModule, JwtModuleOptions } from '@nestjs/jwt';
 import { TokenService } from './tokens/token.service';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { ResponseInterceptor } from './interceptors/auth.interceptor';
+import { EnvironmentVariables } from '@common/configuration/environment.interface';
 
 @Module({
   controllers: [AuthController],
@@ -16,10 +17,16 @@ import { ResponseInterceptor } from './interceptors/auth.interceptor';
     UsersModule,
     JwtModule.registerAsync({
       imports: [ConfigModule],
-      useFactory: async (configService: ConfigService) => ({
-        secret: configService.get<string>('JWT_SECRET'),
-        signOptions: { expiresIn: '1d' },
-      }),
+      useFactory: (configService: ConfigService<EnvironmentVariables>) =>
+        ({
+          secret: configService.getOrThrow<string>('JWT_SECRET'),
+          signOptions: {
+            expiresIn: configService.get<string>(
+              'ACCESS_TOKEN_EXPIRE_IN',
+              '1d',
+            ),
+          },
+        } as JwtModuleOptions),
       inject: [ConfigService],
     }),
   ],

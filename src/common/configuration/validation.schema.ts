@@ -24,4 +24,13 @@ export const validationSchema = Joi.object({
   MONGO_URI: Joi.string().required().messages({
     'any.required': 'MONGO_URI is required',
   }),
+  JWT_SECRET: Joi.string().required().messages({
+    'any.required': 'JWT_SECRET is required',
+  }),
+  ACCESS_TOKEN_EXPIRE_IN: Joi.string().required().messages({
+    'any.required': 'ACCESS_TOKEN_EXPIRE_IN is required',
+  }),
+  REFRESH_TOKEN_EXPIRE_IN: Joi.string().required().messages({
+    'any.required': 'REFRESH_TOKEN_EXPIRE_IN is required',
+  }),
 });

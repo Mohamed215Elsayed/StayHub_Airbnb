@@ -12,4 +12,7 @@ export interface EnvironmentVariables {
   PORT: number;
   fallbackLanguage: string;
   MONGO_URI: string;
+  JWT_SECRET: string;
+  ACCESS_TOKEN_EXPIRE_IN: string;
+  REFRESH_TOKEN_EXPIRE_IN: string;
 }

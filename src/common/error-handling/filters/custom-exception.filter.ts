@@ -1,4 +1,10 @@
-import { ArgumentsHost, Catch, ExceptionFilter, HttpStatus, Logger } from '@nestjs/common';
+import {
+  ArgumentsHost,
+  Catch,
+  ExceptionFilter,
+  HttpStatus,
+  Logger,
+} from '@nestjs/common';
 import { Response } from 'express';
 import { I18nValidationException } from 'nestjs-i18n';
 import { BaseCustomException } from '../custom-exceptions/base-custom.exception';
@@ -10,7 +16,7 @@ import { CustomI18nService } from '@i18n/custom-i18n.service';
 export class CustomExceptionFilter implements ExceptionFilter {
   private readonly logger = new Logger(CustomExceptionFilter.name);
 
-  constructor(private readonly i18nService: CustomI18nService) { }
+  constructor(private readonly i18nService: CustomI18nService) {}
   catch(exception: unknown, host: ArgumentsHost) {
     const response = host.switchToHttp().getResponse<Response>();
 
@@ -23,7 +29,10 @@ export class CustomExceptionFilter implements ExceptionFilter {
 
     // Handle input validation errors from class-validator (DTOs)
     if (exception instanceof I18nValidationException) {
-      const formattedErrors = formatInputValidationErrors(exception.errors, this.i18nService);
+      const formattedErrors = formatInputValidationErrors(
+        exception.errors,
+        this.i18nService,
+      );
       return response.status(HttpStatus.BAD_REQUEST).json({
         errors: formattedErrors,
       });

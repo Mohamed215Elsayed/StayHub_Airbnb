@@ -11,4 +11,5 @@ export interface EnvironmentVariables {
   // NODE_ENV: Environment;
   PORT: number;
   fallbackLanguage: string;
+  MONGO_URI: string;
 }

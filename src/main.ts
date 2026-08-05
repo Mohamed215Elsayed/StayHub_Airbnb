@@ -8,13 +8,13 @@ import { I18nValidationPipe } from 'nestjs-i18n';
 async function bootstrap() {
   const app = await NestFactory.create<INestApplication>(AppModule);
 
- app.useGlobalPipes(
-  new I18nValidationPipe({
-    whitelist: true,
-    forbidNonWhitelisted: true,
-    transform: true,
-  }),
-);
+  app.useGlobalPipes(
+    new I18nValidationPipe({
+      whitelist: true,
+      forbidNonWhitelisted: true,
+      transform: true,
+    }),
+  );
 
   const configService = app.get(ConfigService<EnvironmentVariables>);
   const port = configService.getOrThrow<number>('PORT');

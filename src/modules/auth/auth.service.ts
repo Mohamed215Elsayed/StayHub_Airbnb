@@ -72,7 +72,7 @@ export class AuthService {
     );
 
     if (!user || !(await argon2.verify(user.password, password))) {
-      throw new CustomUnauthorizedException('Invalid credentials');
+      throw new CustomUnauthorizedException('error.INVALID_CREDENTIALS');
     }
 
     const tokens = await this.generateTokensAndSave(user, ipAddress, userAgent);
@@ -90,7 +90,7 @@ export class AuthService {
     const payload = this.tokenService.verifyToken(refreshToken);
 
     if (payload.type !== 'refresh') {
-      throw new CustomUnauthorizedException('Invalid refresh token');
+      throw new CustomUnauthorizedException('error.INVALID_REFRESH_TOKEN');
     }
 
     const matchedToken = await this.tokenService.verifyRefreshToken(
@@ -99,7 +99,7 @@ export class AuthService {
     );
 
     if (!matchedToken) {
-      throw new CustomUnauthorizedException('Invalid refresh token');
+      throw new CustomUnauthorizedException('error.INVALID_REFRESH_TOKEN');
     }
 
     const user = await this.usersService.findOne(
@@ -108,7 +108,7 @@ export class AuthService {
     );
 
     if (!user) {
-      throw new CustomUnauthorizedException('Invalid refresh token');
+      throw new CustomUnauthorizedException('error.INVALID_REFRESH_TOKEN');
     }
 
     await this.tokenService.revokeRefreshToken(matchedToken.tokenId);

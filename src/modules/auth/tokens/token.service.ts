@@ -79,7 +79,7 @@ export class TokenService {
     try {
       return this.jwtService.verify(token);
     } catch {
-      throw new CustomUnauthorizedException('Invalid or expired token');
+      throw new CustomUnauthorizedException('error.INVALID_OR_EXPIRED_TOKEN');
     }
   }
 

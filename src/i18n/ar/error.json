@@ -1,0 +1,10 @@
+{
+    "INVALID_CREDENTIALS": "بيانات الاعتماد غير صالحة",
+    "INVALID_REFRESH_TOKEN": "رمز التحديث غير صالح",
+    "INVALID_OR_EXPIRED_TOKEN": "الرمز غير صالح أو منتهي الصلاحية",
+    "NO_TOKEN_PROVIDED": "لم يتم تقديم رمز",
+    "EMAIL_ALREADY_REGISTERED": "البريد الإلكتروني مسجل بالفعل",
+    "PHONE_NUMBER_ALREADY_REGISTERED": "رقم الهاتف مسجل بالفعل",
+    "USER_ALREADY_EXISTS": "المستخدم موجود بالفعل",
+    "USER_NOT_FOUND": "المستخدم غير موجود"
+}

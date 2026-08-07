@@ -164,3 +164,23 @@ A ready-to-use [Bruno](https://www.usebruno.com/) collection is available under 
 ## 📄 License
 
 This project is for educational purposes as part of a backend development course.
+##########
+The flow works like this:
+
+Service throws exception with i18n key as message (e.g., new CustomConflictException('ERROR.EMAIL_ALREADY_REGISTERED'))
+CustomExceptionFilter catches it and calls exception.formatError(this.i18nService)
+BaseCustomException.formatError() calls i18nService.translate(this.message) where this.message is the i18n key
+CustomI18nService.translate() uses I18nContext.current()?.lang to get the current language
+The language is resolved by QueryResolver (query param lang), HeaderResolver (x-lang header), or AcceptLanguageResolver
+The translated message is returned based on the current language
+This is a clean i18n implementation. The translation files are in the correct location (src/i18n/en/ and src/i18n/ar/) and the I18nJsonLoader is configured in the CoreModule to load from src/i18n/.
+##
+1. Service throws: CustomConflictException('ERROR.EMAIL_ALREADY_REGISTERED')
+                    ↓
+2. CustomExceptionFilter catches → calls exception.formatError(i18nService)
+                    ↓
+3. BaseCustomException.formatError() → i18nService.translate('ERROR.EMAIL_ALREADY_REGISTERED')
+                    ↓
+4. CustomI18nService.translate() → gets current lang from I18nContext
+                    ↓
+5. I18nJsonLoader looks up key in src/i18n/{lang}/error.json

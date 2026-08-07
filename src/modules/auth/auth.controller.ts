@@ -83,11 +83,11 @@ export class AuthController {
       process.env.REFRESH_TOKEN_EXPIRE_IN || '30d',
     );
     res.cookie('refreshToken', refreshToken, {
-      httpOnly: true,
-      secure: true,
-      sameSite: 'lax',
-      maxAge,
-      path: '/auth',
+      httpOnly: true,// Prevents client-side JavaScript from accessing the cookie(XSS protection)
+      secure: true,// Ensures the cookie is only sent over HTTPS
+      sameSite: 'lax',// Helps mitigate CSRF attacks by controlling cross-site cookie sending
+      maxAge,// Cookie expiration time in milliseconds
+      path: '/auth',// Cookie is only sent for requests to /auth endpoints
     });
   }
 }

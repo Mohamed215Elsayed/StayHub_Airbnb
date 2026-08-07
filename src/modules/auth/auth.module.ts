@@ -9,11 +9,27 @@ import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { ResponseInterceptor } from './interceptors/auth.interceptor';
 import { EnvironmentVariables } from '@common/configuration/environment.interface';
 import { MongooseModule } from '@nestjs/mongoose';
-import { RefreshToken, RefreshTokenSchema } from './schemas/refresh-token.schema';
+import {
+  RefreshToken,
+  RefreshTokenSchema,
+} from './schemas/refresh-token.schema';
+import { RegisterUseCase } from './use-cases/register.usecase';
+import { GenerateTokensAndSaveUseCase } from './use-cases/generateTokensAndSave.usecase';
+import { LoginUseCase } from './use-cases/login.usecase';
+import { RefreshTokenUseCase } from './use-cases/refresh-token.usecase';
 
 @Module({
   controllers: [AuthController],
-  providers: [AuthService, TokenService, JwtAuthGuard, ResponseInterceptor],
+  providers: [
+    AuthService,
+    TokenService,
+    JwtAuthGuard,
+    ResponseInterceptor,
+    RegisterUseCase,
+    GenerateTokensAndSaveUseCase,
+    LoginUseCase,
+    RefreshTokenUseCase,
+  ],
   exports: [JwtModule, TokenService, JwtAuthGuard, ResponseInterceptor],
   imports: [
     UsersModule,
@@ -28,10 +44,12 @@ import { RefreshToken, RefreshTokenSchema } from './schemas/refresh-token.schema
               '7d',
             ),
           },
-        } as JwtModuleOptions),
+        }) as JwtModuleOptions,
       inject: [ConfigService],
     }),
-    MongooseModule.forFeature([{ name: RefreshToken.name, schema: RefreshTokenSchema }]),
+    MongooseModule.forFeature([
+      { name: RefreshToken.name, schema: RefreshTokenSchema },
+    ]),
   ],
 })
 export class AuthModule {}

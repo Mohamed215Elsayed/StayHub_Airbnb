@@ -15,6 +15,7 @@ export type SerializedUser = {
   toJSON: {
     transform: (_doc: any, ret: any): SerializedUser => {
       delete ret.password;
+      delete ret.refreshToken;
       delete ret.__v;
       const { _id, name, email, phoneNumber, createdAt, updatedAt } = ret;
       return {
@@ -44,17 +45,6 @@ export class User {
 
   @Prop({ required: true })
   password!: string;
-
-  toAuthUser(): SerializedUser {
-    return {
-      _id: this._id.toString(),
-      name: this.name,
-      email: this.email,
-      phoneNumber: this.phoneNumber,
-      createdAt: this.createdAt,
-      updatedAt: this.updatedAt,
-    };
-  }
 }
 
 export type UserDocument = User & Document;

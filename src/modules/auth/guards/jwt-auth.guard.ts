@@ -1,8 +1,9 @@
-import { Injectable, CanActivate, ExecutionContext, UnauthorizedException } from '@nestjs/common';
+import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { Request } from 'express';
 import { JwtService } from '@nestjs/jwt';
 import { JwtPayload } from '../interfaces/auth.interface';
+import { CustomUnauthorizedException } from '@common/error-handling/custom-exceptions/unauthorized.exception';
 
 @Injectable()
 export class JwtAuthGuard implements CanActivate {
@@ -16,7 +17,7 @@ export class JwtAuthGuard implements CanActivate {
     const token = this.extractToken(request);
 
     if (!token) {
-      throw new UnauthorizedException('No token provided');
+      throw new CustomUnauthorizedException('error.NO_TOKEN_PROVIDED');
     }
 
     try {
@@ -24,7 +25,7 @@ export class JwtAuthGuard implements CanActivate {
       (request as any).user = payload;
       return true;
     } catch {
-      throw new UnauthorizedException('Invalid token');
+      throw new CustomUnauthorizedException('error.INVALID_OR_EXPIRED_TOKEN');
     }
   }
 

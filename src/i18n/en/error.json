@@ -1,0 +1,10 @@
+{
+    "INVALID_CREDENTIALS": "Invalid credentials",
+    "INVALID_REFRESH_TOKEN": "Invalid refresh token",
+    "INVALID_OR_EXPIRED_TOKEN": "Invalid or expired token",
+    "NO_TOKEN_PROVIDED": "No token provided",
+    "EMAIL_ALREADY_REGISTERED": "Email is already registered",
+    "PHONE_NUMBER_ALREADY_REGISTERED": "Phone number is already registered",
+    "USER_ALREADY_EXISTS": "User already exists",
+    "USER_NOT_FOUND": "User not found"
+}

@@ -8,6 +8,8 @@ import { TokenService } from './tokens/token.service';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { ResponseInterceptor } from './interceptors/auth.interceptor';
 import { EnvironmentVariables } from '@common/configuration/environment.interface';
+import { MongooseModule } from '@nestjs/mongoose';
+import { RefreshToken, RefreshTokenSchema } from './schemas/refresh-token.schema';
 
 @Module({
   controllers: [AuthController],
@@ -23,12 +25,13 @@ import { EnvironmentVariables } from '@common/configuration/environment.interfac
           signOptions: {
             expiresIn: configService.get<string>(
               'ACCESS_TOKEN_EXPIRE_IN',
-              '1d',
+              '7d',
             ),
           },
         } as JwtModuleOptions),
       inject: [ConfigService],
     }),
+    MongooseModule.forFeature([{ name: RefreshToken.name, schema: RefreshTokenSchema }]),
   ],
 })
 export class AuthModule {}

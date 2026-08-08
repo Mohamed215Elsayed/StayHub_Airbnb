@@ -1,26 +1,27 @@
 import { Injectable } from '@nestjs/common';
 import { RegisterAuthDto } from './dto/register-auth.dto';
-import { TokenService } from './tokens/token.service';
-import { AuthResponse } from './interfaces/auth.interface';
+import { AuthResponseDto } from './dto/auth-response.dto';
+import { AuthTokens } from './interfaces/auth.interface';
 import { LoginAuthDto } from './dto/login-auth.dto';
 import { RegisterUseCase } from './use-cases/register.usecase';
 import { LoginUseCase } from './use-cases/login.usecase';
 import { RefreshTokenUseCase } from './use-cases/refresh-token.usecase';
+import { LogoutUseCase } from './use-cases/logout.usecase';
 
 @Injectable()
 export class AuthService {
   constructor(
-    private readonly tokenService: TokenService,
     private readonly registerUseCase: RegisterUseCase,
     private readonly loginUseCase: LoginUseCase,
     private readonly refreshTokenUseCase: RefreshTokenUseCase,
+    private readonly logoutUseCase: LogoutUseCase,
   ) {}
 
   async register(
     registerAuthDto: RegisterAuthDto,
     ipAddress?: string,
     userAgent?: string,
-  ): Promise<AuthResponse> {
+  ): Promise<AuthResponseDto> {
     return this.registerUseCase.execute(registerAuthDto, ipAddress, userAgent);
   }
 
@@ -28,7 +29,7 @@ export class AuthService {
     loginAuthDto: LoginAuthDto,
     ipAddress?: string,
     userAgent?: string,
-  ): Promise<AuthResponse> {
+  ): Promise<AuthResponseDto> {
     return this.loginUseCase.execute(loginAuthDto, ipAddress, userAgent);
   }
 
@@ -36,11 +37,11 @@ export class AuthService {
     refreshToken: string,
     ipAddress?: string,
     userAgent?: string,
-  ): Promise<{ accessToken: string; refreshToken: string }> {
+  ): Promise<AuthTokens> {
     return this.refreshTokenUseCase.execute(refreshToken, ipAddress, userAgent);
   }
 
   async logout(userId: string): Promise<void> {
-    await this.tokenService.revokeAllUserTokens(userId);
+    return this.logoutUseCase.execute(userId);
   }
 }

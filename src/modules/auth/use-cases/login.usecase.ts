@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { LoginAuthDto } from '../dto/login-auth.dto';
-import { SerializedUser } from '@modules/users/schemas/user.schema';
 import { CustomUnauthorizedException } from '@common/error-handling/custom-exceptions/unauthorized.exception';
 import * as argon2 from 'argon2';
 import { UsersService } from '@modules/users/users.service';
 import { GenerateTokensAndSaveUseCase } from './generateTokensAndSave.usecase';
+import { AuthResponseDto } from '../dto/auth-response.dto';
 
 @Injectable()
 export class LoginUseCase {
@@ -16,7 +16,7 @@ export class LoginUseCase {
     loginAuthDto: LoginAuthDto,
     ipAddress?: string,
     userAgent?: string,
-  ) {
+  ): Promise<AuthResponseDto> {
     const { email, password } = loginAuthDto;
 
     const user = await this.usersService.findOne(
@@ -29,13 +29,20 @@ export class LoginUseCase {
     }
 
     const tokens = await this.generateTokensAndSaveUseCase.execute(
-      user._id.toString(),
+      user.id,
       user.email,
       ipAddress,
       userAgent,
     );
     return {
-      user: user.toJSON() as SerializedUser,
+      user: {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        phoneNumber: user.phoneNumber,
+        createdAt: user.createdAt,
+        updatedAt: user.updatedAt,
+      },
       ...tokens,
     };
   }

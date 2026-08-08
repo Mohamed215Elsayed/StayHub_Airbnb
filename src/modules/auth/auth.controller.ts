@@ -11,7 +11,8 @@ import type { Response } from 'express';
 import * as process from 'process';
 import { AuthService } from './auth.service';
 import { RegisterAuthDto } from './dto/register-auth.dto';
-import { AuthResponse } from './interfaces/auth.interface';
+import { AuthResponseDto } from './dto/auth-response.dto';
+import { AuthTokens } from './interfaces/auth.interface';
 import { ResponseInterceptor } from './interceptors/auth.interceptor';
 import { LoginAuthDto } from './dto/login-auth.dto';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
@@ -28,7 +29,7 @@ export class AuthController {
     @Body() registerAuthDto: RegisterAuthDto,
     @Req() req: any,
     @Res({ passthrough: true }) res: Response,
-  ): Promise<AuthResponse> {
+  ): Promise<AuthResponseDto> {
     const result = await this.authService.register(
       registerAuthDto,
       req.ip,
@@ -44,7 +45,7 @@ export class AuthController {
     @Body() loginAuthDto: LoginAuthDto,
     @Req() req: any,
     @Res({ passthrough: true }) res: Response,
-  ): Promise<AuthResponse> {
+  ): Promise<AuthResponseDto> {
     const result = await this.authService.login(
       loginAuthDto,
       req.ip,
@@ -60,7 +61,7 @@ export class AuthController {
     @Body() refreshTokenDto: RefreshTokenDto,
     @Req() req: any,
     @Res({ passthrough: true }) res: Response,
-  ): Promise<{ accessToken: string; refreshToken: string }> {
+  ): Promise<AuthTokens> {
     const tokens = await this.authService.refresh(
       refreshTokenDto.refreshToken,
       req.ip,
@@ -83,11 +84,11 @@ export class AuthController {
       process.env.REFRESH_TOKEN_EXPIRE_IN || '30d',
     );
     res.cookie('refreshToken', refreshToken, {
-      httpOnly: true,// Prevents client-side JavaScript from accessing the cookie(XSS protection)
-      secure: true,// Ensures the cookie is only sent over HTTPS
-      sameSite: 'lax',// Helps mitigate CSRF attacks by controlling cross-site cookie sending
-      maxAge,// Cookie expiration time in milliseconds
-      path: '/auth',// Cookie is only sent for requests to /auth endpoints
+      httpOnly: true, // Prevents client-side JavaScript from accessing the cookie(XSS protection)
+      secure: true, // Ensures the cookie is only sent over HTTPS
+      sameSite: 'lax', // Helps mitigate CSRF attacks by controlling cross-site cookie sending
+      maxAge, // Cookie expiration time in milliseconds
+      path: '/auth', // Cookie is only sent for requests to /auth endpoints
     });
   }
 }

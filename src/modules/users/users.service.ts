@@ -1,86 +1,119 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import * as argon2 from 'argon2';
 import { User, UserDocument } from './schemas/user.schema';
-import { SerializedUser } from './schemas/user.schema';
 import { CreateUserDto } from './dto/create-user.dto';
-import { CustomConflictException } from '@common/error-handling/custom-exceptions/conflict.exception';
+import { UserResponseDto } from './dto/user-response.dto';
 import { CustomNotFoundException } from '@common/error-handling/custom-exceptions/not-found.exception';
+import { CreateUserUseCase } from './use-cases/create-user.usecase';
 
+/**
+ * Service handling user-related read operations (findOne, findOneOrFail)
+ * and delegating user creation to {@link CreateUserUseCase}.
+ */
 @Injectable()
 export class UsersService {
   constructor(
     @InjectModel(User.name) private readonly usersModel: Model<UserDocument>,
+    private readonly createUserUseCase: CreateUserUseCase,
   ) {}
 
-  async create(createUserDto: CreateUserDto): Promise<UserDocument> {
-    const existingUser: SerializedUser | null = await this.findOne(
-      {
-        $or: [
-          { email: createUserDto.email },
-          { phoneNumber: createUserDto.phoneNumber },
-        ],
-      },
-      { lean: true },
-    );
-
-    if (existingUser) {
-      if (existingUser.email === createUserDto.email) {
-        throw new CustomConflictException('error.EMAIL_ALREADY_REGISTERED');
-      }
-      if (existingUser.phoneNumber === createUserDto.phoneNumber) {
-        throw new CustomConflictException(
-          'error.PHONE_NUMBER_ALREADY_REGISTERED',
-        );
-      }
-      throw new CustomConflictException('error.USER_ALREADY_EXISTS');
-    }
-
-    const passwordHash = await argon2.hash(createUserDto.password, {
-      type: argon2.argon2id,
-      memoryCost: 65536,
-      timeCost: 3,
-      parallelism: 1,
-    });
-
-    try {
-      return await this.usersModel.create({
-        name: createUserDto.name,
-        email: createUserDto.email,
-        phoneNumber: createUserDto.phoneNumber,
-        password: passwordHash,
-      });
-    } catch (error: any) {
-      if (error.code === 11000 && error.keyPattern) {
-        const duplicatedField = Object.keys(error.keyPattern)[0];
-        if (duplicatedField === 'email') {
-          throw new CustomConflictException('error.EMAIL_ALREADY_REGISTERED');
-        }
-        if (duplicatedField === 'phoneNumber') {
-          throw new CustomConflictException(
-            'error.PHONE_NUMBER_ALREADY_REGISTERED',
-          );
-        }
-        throw new CustomConflictException('error.USER_ALREADY_EXISTS');
-      }
-      throw error;
-    }
+  /**
+   * Creates a new user.
+   *
+   * Delegates to {@link CreateUserUseCase} which handles:
+   * - Duplicate email / phone validation
+   * - Argon2id password hashing
+   * - MongoDB document creation
+   * - Serialization to {@link UserResponseDto} (passwords excluded)
+   *
+   * @param createUserDto - The user data transfer object containing
+   *                        name, email, password, and phoneNumber.
+   * @returns The created user serialized as {@link UserResponseDto}.
+   * @throws CustomConflictException if email or phone already exists.
+   */
+  async create(createUserDto: CreateUserDto): Promise<UserResponseDto> {
+    return this.createUserUseCase.execute(createUserDto);
   }
 
+  /**
+   * Finds a single user matching the given query.
+   *
+   * By default the `password` field is excluded from the result.
+   * Pass `{ includePassword: true }` if you need the raw document (e.g. for
+   * password verification during login).
+   *
+   * When `lean: true` is passed, Mongoose returns a plain JavaScript
+   * object instead of a full Mongoose document. This is useful for
+   * read-only operations where Mongoose getters/hooks aren't needed.
+   *
+   * @example
+   * // Find by email — excludes password, returns Mongoose document
+   * const user = await usersService.findOne({ email: 'user@example.com' });
+   *
+   * @example
+   * // Find by email — includes password, returns lean object
+   * const user = await usersService.findOne(
+   *   { email: 'user@example.com' },
+   *   { includePassword: true, lean: true },
+   * );
+   *
+   * @param query  - A Mongoose-compatible query filter.
+   * @param options - `includePassword` keeps the hashed password field.
+   *                  `lean` returns a plain object instead of a document.
+   */
   async findOne(
     query: Record<string, unknown>,
     options: { includePassword?: boolean; lean: true },
-  ): Promise<SerializedUser | null>;
+  ): Promise<{
+    _id: string;
+    name: string;
+    email: string;
+    phoneNumber: string;
+    createdAt: Date;
+    updatedAt: Date;
+  } | null>;
+
+  /**
+   * Finds a single user matching the given query (document variant).
+   *
+   * Returns a full Mongoose document (without the `password` field) when
+   * `lean` is omitted or falsy.
+   *
+   * @param query  - A Mongoose-compatible query filter.
+   * @param options - `includePassword` keeps the hashed password field.
+   */
   async findOne(
     query: Record<string, unknown>,
     options?: { includePassword?: boolean; lean?: boolean },
   ): Promise<UserDocument | null>;
+
+  /**
+   * Implementation of the overloaded `findOne` method.
+   *
+   * Builds a Mongoose query with optional `password` exclusion and
+   * optional `.lean()` transformation.
+   *
+   * @param query  - A Mongoose-compatible query filter.
+   * @param options - `includePassword` and/or `lean` flags.
+   * @returns A Mongoose document (default) or a lean serialized object.
+   */
   async findOne(
     query: Record<string, unknown>,
     options?: { includePassword?: boolean; lean?: boolean },
-  ): Promise<UserDocument | SerializedUser | null> {
-    let queryBuilder: any = this.usersModel.findOne(query as any);
+  ): Promise<
+    | UserDocument
+    | {
+        _id: string;
+        name: string;
+        email: string;
+        phoneNumber: string;
+        createdAt: Date;
+        updatedAt: Date;
+      }
+    | null
+  > {
+    let queryBuilder: any = this.usersModel.findOne(query);
     if (!options?.includePassword) {
       queryBuilder = queryBuilder.select('-password');
     }
@@ -90,18 +123,49 @@ export class UsersService {
     return queryBuilder.exec();
   }
 
+  /**
+   * Finds a single user or throws if not found.
+   *
+   * Behaves identically to {@link findOne} overloads, but throws
+   * {@link CustomNotFoundException} instead of returning `null` when
+   * no document matches the query.
+   *
+   * @param query  - A Mongoose-compatible query filter.
+   * @param options - `includePassword` and/or `lean` flags.
+   * @returns A Mongoose document or lean serialized object.
+   * @throws CustomNotFoundException (localized) if the user is not found.
+   */
   async findOneOrFail(
     query: Record<string, unknown>,
     options: { includePassword?: boolean; lean: true },
-  ): Promise<SerializedUser>;
+  ): Promise<{
+    _id: string;
+    name: string;
+    email: string;
+    phoneNumber: string;
+    createdAt: Date;
+    updatedAt: Date;
+  }>;
   async findOneOrFail(
     query: Record<string, unknown>,
     options?: { includePassword?: boolean; lean?: boolean },
   ): Promise<UserDocument>;
+
+  /** Implementation — delegates to {@link findOne} and throws if null. */
   async findOneOrFail(
     query: Record<string, unknown>,
     options?: { includePassword?: boolean; lean?: boolean },
-  ): Promise<UserDocument | SerializedUser> {
+  ): Promise<
+    | UserDocument
+    | {
+        _id: string;
+        name: string;
+        email: string;
+        phoneNumber: string;
+        createdAt: Date;
+        updatedAt: Date;
+      }
+  > {
     const user = await this.findOne(query, options);
     if (!user) {
       throw new CustomNotFoundException('error.USER_NOT_FOUND');

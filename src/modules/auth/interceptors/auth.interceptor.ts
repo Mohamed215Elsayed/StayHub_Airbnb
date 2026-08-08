@@ -7,7 +7,6 @@ import {
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
-// تعريف نوع الـ Response الموحد
 export interface StandardResponse<T = unknown> {
   success: boolean;
   data: T;

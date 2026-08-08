@@ -1,10 +1,7 @@
 import { CreateUserDto } from '@modules/users/dto/create-user.dto';
 import { Injectable } from '@nestjs/common';
 import { RegisterAuthDto } from '../dto/register-auth.dto';
-import {
-  SerializedUser,
-  UserDocument,
-} from '@modules/users/schemas/user.schema';
+import { AuthResponseDto } from '../dto/auth-response.dto';
 import { UsersService } from '@modules/users/users.service';
 import { GenerateTokensAndSaveUseCase } from './generateTokensAndSave.usecase';
 
@@ -19,11 +16,7 @@ export class RegisterUseCase {
     registerAuthDto: RegisterAuthDto,
     ipAddress?: string,
     userAgent?: string,
-  ): Promise<{
-    user: SerializedUser;
-    accessToken: string;
-    refreshToken: string;
-  }> {
+  ): Promise<AuthResponseDto> {
     const createUserDto: CreateUserDto = {
       name: registerAuthDto.name,
       email: registerAuthDto.email,
@@ -31,15 +24,22 @@ export class RegisterUseCase {
       password: registerAuthDto.password,
     };
 
-    const user: UserDocument = await this.usersService.create(createUserDto);
+    const user = await this.usersService.create(createUserDto);
     const tokens = await this.generateTokensAndSaveUseCase.execute(
-      user._id.toString(),
+      user.id,
       user.email,
       ipAddress,
       userAgent,
     );
     return {
-      user: user.toJSON() as SerializedUser,
+      user: {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        phoneNumber: user.phoneNumber,
+        createdAt: user.createdAt,
+        updatedAt: user.updatedAt,
+      },
       ...tokens,
     };
   }

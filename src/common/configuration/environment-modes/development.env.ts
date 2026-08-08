@@ -12,4 +12,3 @@ export const developmentEnv = (): EnvironmentVariables => ({
   ACCESS_TOKEN_EXPIRE_IN: process.env.ACCESS_TOKEN_EXPIRE_IN ?? '7d',
   REFRESH_TOKEN_EXPIRE_IN: process.env.REFRESH_TOKEN_EXPIRE_IN ?? '30d',
 });
-

@@ -12,6 +12,7 @@
     "allowSyntheticDefaultImports": true,
     "target": "ES2023",
     "rootDir": "./src",
+    "baseUrl": ".",
     "paths": {
       "@common/*": ["./src/common/*"],
       "@modules/*": ["./src/modules/*"],
@@ -26,7 +27,9 @@
     "noImplicitAny": false,
     "strictBindCallApply": false,
     "noFallthroughCasesInSwitch": false,
+    "ignoreDeprecations": "6.0",
     "types": ["node"]
   },
+  "include": ["src"],
   "exclude": ["node_modules", "dist", "test"]
 }

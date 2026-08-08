@@ -1,5 +1,3 @@
-import { SerializedUser } from '@modules/users/schemas/user.schema';
-
 /**
  * JWT payload embedded in signed tokens.
  * - `sub`: The user's MongoDB ObjectId (as string), used as the subject identifier.
@@ -24,18 +22,6 @@ export interface RefreshTokenPayload extends JwtPayload {
  * Pair of tokens returned by the auth service on registration and login.
  */
 export interface AuthTokens {
-  accessToken: string;
-  refreshToken: string;
-}
-
-/**
- * Standard API response for authentication endpoints.
- * - `user`: The authenticated user (password stripped, serialized).
- * - `accessToken`: Short-lived JWT for API authorization.
- * - `refreshToken`: Long-lived JWT stored in an HttpOnly cookie.
- */
-export interface AuthResponse {
-  user: SerializedUser;
   accessToken: string;
   refreshToken: string;
 }

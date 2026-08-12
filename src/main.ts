@@ -5,10 +5,12 @@ import { EnvironmentVariables } from './common/configuration/environment.interfa
 import { AppModule } from './app.module';
 import { I18nValidationPipe, I18nMiddleware } from 'nestjs-i18n';
 import { SwaggerConfig } from './common/swagger';
+import { PinoLogger } from '@common/interceptors/pino.logger';
 
 async function bootstrap() {
-  const app = await NestFactory.create<INestApplication>(AppModule);
-  // app.enableCors();
+  const app = await NestFactory.create<INestApplication>(AppModule, {
+    logger: new PinoLogger(),
+  });
   app.setGlobalPrefix('api');
   const configService = app.get(ConfigService<EnvironmentVariables>);
   const port = configService.getOrThrow<number>('PORT');
@@ -16,8 +18,6 @@ async function bootstrap() {
   const i18nMiddleware = app.get(I18nMiddleware);
   app.use(i18nMiddleware.use.bind(i18nMiddleware));
 
-  //apply pipes after middlewares
-  // To use nestjs-i18n in your DTO validation.json
   app.useGlobalPipes(
     new I18nValidationPipe({
       whitelist: true,
@@ -26,18 +26,15 @@ async function bootstrap() {
     }),
   );
 
-  //apply Global filters and Interceptors
-  // app.useGlobalFilters(...);
-  // app.useGlobalInterceptors(...);
-  
-  //Swagger Setup
   SwaggerConfig.setup(app);
 
+  const logger = app.get(PinoLogger);
+  logger.log(`Server started on port: ${port}`);
   await app.listen(port);
-  console.log(`Server started on port: ${port}`);
 }
 
 bootstrap().catch((error) => {
-  console.error('Failed to start application:', error);
+  const logger = new PinoLogger();
+  logger.error('Failed to start application', error?.stack);
   process.exit(1);
 });

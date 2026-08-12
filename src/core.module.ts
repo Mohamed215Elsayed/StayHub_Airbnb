@@ -16,6 +16,10 @@ import {
 import { EnvironmentVariables } from '@common/configuration/environment.interface';
 import { MongooseModule } from '@nestjs/mongoose';
 import { CustomI18nService } from './i18n/custom-i18n.service';
+import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
+import { CustomExceptionFilter } from '@common/error-handling/filters/custom-exception.filter';
+import { LoggerInterceptor } from '@common/interceptors';
+import { PinoLogger } from '@common/interceptors';
 
 @Module({
   imports: [
@@ -51,7 +55,12 @@ import { CustomI18nService } from './i18n/custom-i18n.service';
       }),
     }),
   ],
-  providers: [CustomI18nService],
+  providers: [
+    CustomI18nService,
+    PinoLogger,
+    { provide: APP_FILTER, useClass: CustomExceptionFilter },
+    { provide: APP_INTERCEPTOR, useClass: LoggerInterceptor },
+  ],
   exports: [I18nModule, MongooseModule, CustomI18nService],
 })
 export class CoreModule {}

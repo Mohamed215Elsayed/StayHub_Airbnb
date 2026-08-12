@@ -5,6 +5,7 @@ import * as argon2 from 'argon2';
 import { UsersService } from '@modules/users/users.service';
 import { GenerateTokensAndSaveUseCase } from './generateTokensAndSave.usecase';
 import { AuthResponseDto } from '../dto/auth-response.dto';
+import { plainToInstance } from 'class-transformer';
 
 @Injectable()
 export class LoginUseCase {
@@ -34,7 +35,7 @@ export class LoginUseCase {
       ipAddress,
       userAgent,
     );
-    return {
+    return plainToInstance(AuthResponseDto, {
       user: {
         id: user.id,
         name: user.name,
@@ -44,6 +45,6 @@ export class LoginUseCase {
         updatedAt: user.updatedAt,
       },
       ...tokens,
-    };
+    });
   }
 }

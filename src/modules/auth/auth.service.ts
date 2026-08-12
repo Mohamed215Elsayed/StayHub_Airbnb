@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { RegisterAuthDto } from './dto/register-auth.dto';
 import { AuthResponseDto } from './dto/auth-response.dto';
 import { AuthTokens } from './interfaces/auth.interface';
@@ -10,6 +10,7 @@ import { LogoutUseCase } from './use-cases/logout.usecase';
 
 @Injectable()
 export class AuthService {
+  private readonly logger = new Logger(AuthService.name);
   constructor(
     private readonly registerUseCase: RegisterUseCase,
     private readonly loginUseCase: LoginUseCase,
@@ -22,7 +23,14 @@ export class AuthService {
     ipAddress?: string,
     userAgent?: string,
   ): Promise<AuthResponseDto> {
-    return this.registerUseCase.execute(registerAuthDto, ipAddress, userAgent);
+    this.logger.log(`Register attempt for email: ${registerAuthDto.email}`);
+    const result = await this.registerUseCase.execute(
+      registerAuthDto,
+      ipAddress,
+      userAgent,
+    );
+    this.logger.log(`User registered successfully: ${result.user.id}`);
+    return result;
   }
 
   async login(
@@ -30,7 +38,14 @@ export class AuthService {
     ipAddress?: string,
     userAgent?: string,
   ): Promise<AuthResponseDto> {
-    return this.loginUseCase.execute(loginAuthDto, ipAddress, userAgent);
+    this.logger.log(`Login attempt for email: ${loginAuthDto.email}`);
+    const result = await this.loginUseCase.execute(
+      loginAuthDto,
+      ipAddress,
+      userAgent,
+    );
+    this.logger.log(`User logged in successfully: ${result.user.id}`);
+    return result;
   }
 
   async refresh(
@@ -38,10 +53,19 @@ export class AuthService {
     ipAddress?: string,
     userAgent?: string,
   ): Promise<AuthTokens> {
-    return this.refreshTokenUseCase.execute(refreshToken, ipAddress, userAgent);
+    this.logger.log('Refresh token attempt');
+    const tokens = await this.refreshTokenUseCase.execute(
+      refreshToken,
+      ipAddress,
+      userAgent,
+    );
+    this.logger.log('Tokens refreshed successfully');
+    return tokens;
   }
 
-  async logout(userId: string): Promise<void> {
-    return this.logoutUseCase.execute(userId);
+  async logout(userId: string, ipAddress?: string, userAgent?: string): Promise<void> {
+    this.logger.log(`Logout attempt for user: ${userId}`);
+    await this.logoutUseCase.execute(userId, ipAddress, userAgent);
+    this.logger.log(`User logged out successfully: ${userId}`);
   }
 }

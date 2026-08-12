@@ -18,6 +18,7 @@ import { GenerateTokensAndSaveUseCase } from './use-cases/generateTokensAndSave.
 import { LoginUseCase } from './use-cases/login.usecase';
 import { RefreshTokenUseCase } from './use-cases/refresh-token.usecase';
 import { LogoutUseCase } from './use-cases/logout.usecase';
+import { CoreModule } from '../../core.module';
 
 @Module({
   controllers: [AuthController],
@@ -34,6 +35,7 @@ import { LogoutUseCase } from './use-cases/logout.usecase';
   ],
   exports: [JwtModule, TokenService, JwtAuthGuard, ResponseInterceptor],
   imports: [
+    CoreModule,
     UsersModule,
     JwtModule.registerAsync({
       imports: [ConfigModule],

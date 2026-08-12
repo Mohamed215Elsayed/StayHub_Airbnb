@@ -1,3 +1,4 @@
+import { Request } from 'express';
 /**
  * JWT payload embedded in signed tokens.
  * - `sub`: The user's MongoDB ObjectId (as string), used as the subject identifier.
@@ -10,6 +11,9 @@ export interface JwtPayload {
   type?: string;
 }
 
+export interface RequestWithUser extends Request {
+  user: JwtPayload;
+}
 /**
  * Extended JWT payload used during refresh-token verification.
  * Adds `tokenId` so the service can revoke the exact stored token after use.

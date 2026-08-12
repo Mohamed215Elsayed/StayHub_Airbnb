@@ -41,7 +41,7 @@ export class CustomExceptionFilter implements ExceptionFilter {
     // Unknown exceptions
     this.logger.error(exception instanceof Error ? exception.stack : exception);
     response.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
-      errors: [{ message: 'Internal Server Error' }],
+      errors: [{ message: this.i18nService.translate('error.INTERNAL_SERVER_ERROR') }],
     });
   }
 }

@@ -4,6 +4,6 @@ import { defaultEnv } from './default.env';
 
 export const stagingEnv = (): EnvironmentVariables => ({
   ...defaultEnv(),
-  // NODE_ENV: Environment.Staging,
-  PORT: parseInt(process.env.PORT ?? '6000', 10),
+  NODE_ENV: Environment.Staging,
+  PORT: parseInt(process.env.PORT ?? '3001', 10),
 });

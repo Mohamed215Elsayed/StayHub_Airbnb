@@ -15,6 +15,7 @@ import {
 } from 'nestjs-i18n';
 import { EnvironmentVariables } from '@common/configuration/environment.interface';
 import { MongooseModule } from '@nestjs/mongoose';
+import { CustomI18nService } from './i18n/custom-i18n.service';
 
 @Module({
   imports: [
@@ -50,5 +51,7 @@ import { MongooseModule } from '@nestjs/mongoose';
       }),
     }),
   ],
+  providers: [CustomI18nService],
+  exports: [I18nModule, MongooseModule, CustomI18nService],
 })
 export class CoreModule {}

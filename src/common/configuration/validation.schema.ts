@@ -19,7 +19,7 @@ export const validationSchema = Joi.object({
   NODE_ENV: Joi.string()
     .valid(...Object.values(Environment))
     .default(Environment.Development),
-  PORT: Joi.number().default(5000),
+  PORT: Joi.number().default(3001),
   fallbackLanguage: Joi.string().default('ar'),
   MONGO_URI: Joi.string().required().messages({
     'any.required': 'MONGO_URI is required',

@@ -1,0 +1,16 @@
+{
+  "NAME_STRING": "Name must be a string.",
+  "NAME_REQUIRED": "Name is required.",
+  "NAME_MIN_LENGTH": "Name must be at least 2 characters long.",
+  "NAME_MAX_LENGTH": "Name must not exceed 100 characters.",
+  "EMAIL_INVALID": "Please enter a valid email address.",
+  "EMAIL_REQUIRED": "Email is required.",
+  "PASSWORD_STRING": "Password must be a string.",
+  "PASSWORD_MIN_LENGTH": "Password must be at least 8 characters long.",
+  "PASSWORD_TOO_LONG": "Password is too long. Maximum length is 64 characters.",
+  "PASSWORD_UPPERCASE": "Password must contain at least 1 uppercase letter.",
+  "PASSWORD_NUMBER": "Password must contain at least 1 number.",
+  "PASSWORD_SPECIAL_CHAR": "Password must contain at least 1 special character.",
+  "PHONE_REQUIRED": "Phone number is required.",
+  "PHONE_INVALID": "Phone number must be a valid Egyptian number."
+}

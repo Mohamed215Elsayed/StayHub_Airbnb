@@ -6,89 +6,108 @@ import {
   Req,
   UseGuards,
   Res,
+  HttpCode,
+  HttpStatus,
+  Ip,
+  Headers,
 } from '@nestjs/common';
 import type { Response } from 'express';
-import * as process from 'process';
 import { AuthService } from './auth.service';
 import { RegisterAuthDto } from './dto/register-auth.dto';
 import { AuthResponseDto } from './dto/auth-response.dto';
-import { AuthTokens } from './interfaces/auth.interface';
+import type { AuthTokens, RequestWithUser } from './interfaces/auth.interface';
 import { ResponseInterceptor } from './interceptors/auth.interceptor';
 import { LoginAuthDto } from './dto/login-auth.dto';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { RefreshTokenDto } from './dto/refresh-token.dto';
 import { parseDurationToMs } from '@common/utils/parse-duration';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { CustomI18nService } from '@i18n/custom-i18n.service';
+import {
+  RegisterSwagger,
+  LoginSwagger,
+  RefreshTokenSwagger,
+  LogoutSwagger,
+} from './swagger';
+import { ConfigService } from '@nestjs/config';
+import { EnvironmentVariables } from '@common/configuration/environment.interface';
+import { API_TAGS } from '@common/swagger';
 
+@ApiTags(API_TAGS.AUTH)
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(
+    private readonly authService: AuthService,
+    private readonly customI18nService: CustomI18nService,
+    private readonly configService: ConfigService<EnvironmentVariables>,
+  ) { }
 
   @UseInterceptors(ResponseInterceptor)
   @Post('/register')
+  @RegisterSwagger
   async register(
     @Body() registerAuthDto: RegisterAuthDto,
-    @Req() req: any,
+    @Ip() ip: string,
     @Res({ passthrough: true }) res: Response,
+    @Headers('user-agent') userAgent?: string,
   ): Promise<AuthResponseDto> {
-    const result = await this.authService.register(
-      registerAuthDto,
-      req.ip,
-      req.headers['user-agent'],
-    );
+    const result = await this.authService.register(registerAuthDto, ip, userAgent);
     this.setRefreshTokenCookie(res, result.refreshToken);
     return result;
   }
 
   @UseInterceptors(ResponseInterceptor)
   @Post('/login')
+  @LoginSwagger
+  @HttpCode(HttpStatus.OK)
   async login(
     @Body() loginAuthDto: LoginAuthDto,
-    @Req() req: any,
+    @Ip() ip: string,
     @Res({ passthrough: true }) res: Response,
+    @Headers('user-agent') userAgent?: string,
   ): Promise<AuthResponseDto> {
-    const result = await this.authService.login(
-      loginAuthDto,
-      req.ip,
-      req.headers['user-agent'],
-    );
+    const result = await this.authService.login(loginAuthDto, ip, userAgent);
     this.setRefreshTokenCookie(res, result.refreshToken);
     return result;
   }
 
   @UseInterceptors(ResponseInterceptor)
   @Post('/refresh')
+  @RefreshTokenSwagger
   async refresh(
     @Body() refreshTokenDto: RefreshTokenDto,
-    @Req() req: any,
+    @Ip() ip: string,
     @Res({ passthrough: true }) res: Response,
+    @Headers('user-agent') userAgent?: string,
   ): Promise<AuthTokens> {
-    const tokens = await this.authService.refresh(
-      refreshTokenDto.refreshToken,
-      req.ip,
-      req.headers['user-agent'],
-    );
+    const tokens = await this.authService.refresh(refreshTokenDto.refreshToken, ip, userAgent);
     this.setRefreshTokenCookie(res, tokens.refreshToken);
     return tokens;
   }
 
   @UseGuards(JwtAuthGuard)
   @Post('/logout')
-  async logout(@Req() req: any): Promise<{ message: string }> {
+  @ApiBearerAuth()
+  @LogoutSwagger
+  async logout(@Req() req: RequestWithUser): Promise<{ message: string }> {
     const userId = req.user.sub;
-    await this.authService.logout(userId);
-    return { message: 'Logged out successfully' };
+    const ip = req.ip;
+    const userAgent = req.headers['user-agent'] ?? 'unknown';
+    await this.authService.logout(userId, ip, userAgent);
+    return { message: this.customI18nService.translate('auth.LOGOUT_SUCCESS') };
   }
 
   private setRefreshTokenCookie(res: Response, refreshToken: string): void {
     const maxAge = parseDurationToMs(
-      process.env.REFRESH_TOKEN_EXPIRE_IN || '30d',
+      this.configService.getOrThrow('REFRESH_TOKEN_EXPIRE_IN'),
     );
+    const isProd = this.configService.get('NODE_ENV') === 'production';
     res.cookie('refreshToken', refreshToken, {
-      httpOnly: true, // Prevents client-side JavaScript from accessing the cookie(XSS protection)
-      secure: true, // Ensures the cookie is only sent over HTTPS
-      sameSite: 'lax', // Helps mitigate CSRF attacks by controlling cross-site cookie sending
-      maxAge, // Cookie expiration time in milliseconds
-      path: '/auth', // Cookie is only sent for requests to /auth endpoints
+      httpOnly: true,
+      secure: isProd,
+      sameSite: 'lax',
+      maxAge,
+      path: '/auth',
     });
   }
 }

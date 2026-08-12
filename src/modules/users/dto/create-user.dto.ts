@@ -8,38 +8,51 @@ import {
   IsPhoneNumber,
 } from 'class-validator';
 import { Transform } from 'class-transformer';
+import { ApiProperty } from '@nestjs/swagger';
+import { i18nValidationMessage } from 'nestjs-i18n';
 
 export class CreateUserDto {
+  @ApiProperty({ example: 'Ahmed Hassan', description: 'Full name' })
   @Transform(({ value }) => value?.trim())
-  @IsString()
-  @IsNotEmpty()
-  @MinLength(2, { message: 'Name must be at least 2 characters' })
-  @MaxLength(100)
+  @IsString({ message: i18nValidationMessage('user.NAME_STRING') })
+  @IsNotEmpty({ message: i18nValidationMessage('user.NAME_REQUIRED') })
+  @MinLength(2, {
+    message: i18nValidationMessage('user.NAME_MIN_LENGTH'),
+  })
+  @MaxLength(100, { message: i18nValidationMessage('user.NAME_MAX_LENGTH') })
   name!: string;
 
+  @ApiProperty({ example: 'ahmed@example.com', description: 'Email address' })
   @Transform(({ value }) => value?.trim().toLowerCase())
-  @IsEmail({}, { message: 'Email must be a valid email address' })
-  @IsNotEmpty()
+  @IsEmail({}, { message: i18nValidationMessage('user.EMAIL_INVALID') })
+  @IsNotEmpty({ message: i18nValidationMessage('user.EMAIL_REQUIRED') })
   email!: string;
 
-  @IsString()
-  @MinLength(8, { message: 'Password must be at least 8 characters long' })
-  @MaxLength(64)
+  @ApiProperty({ example: 'P@ssw0rd123', description: 'Strong password' })
+  @IsString({ message: i18nValidationMessage('user.PASSWORD_STRING') })
+  @MinLength(8, {
+    message: i18nValidationMessage('user.PASSWORD_MIN_LENGTH'),
+  })
+  @MaxLength(64, { message: i18nValidationMessage('user.PASSWORD_TOO_LONG') })
   @Matches(/(?=.*[A-Z])/, {
-    message: 'Password must contain at least 1 uppercase letter',
+    message: i18nValidationMessage('user.PASSWORD_UPPERCASE'),
   })
   @Matches(/(?=.*\d)/, {
-    message: 'Password must contain at least 1 number',
+    message: i18nValidationMessage('user.PASSWORD_NUMBER'),
   })
   @Matches(/(?=.*[!@#$%^&*(),.?":{}|<>])/, {
-    message: 'Password must contain at least 1 special character',
+    message: i18nValidationMessage('user.PASSWORD_SPECIAL_CHAR'),
   })
   password!: string;
 
+  @ApiProperty({
+    example: '+201012345678',
+    description: 'Egyptian phone number',
+  })
   @Transform(({ value }) => value?.trim())
-  @IsNotEmpty()
+  @IsNotEmpty({ message: i18nValidationMessage('user.PHONE_REQUIRED') })
   @IsPhoneNumber('EG', {
-    message: 'Phone number must be a valid Egyptian number',
+    message: i18nValidationMessage('user.PHONE_INVALID'),
   })
   phoneNumber!: string;
 }

@@ -6,9 +6,9 @@
  * ❌ This does not perform any runtime validation.
  * It only provides compile-time type checking and editor assistance.
  */
-// import { Environment } from './environment.enum';
+import { Environment } from './environment.enum';
 export interface EnvironmentVariables {
-  // NODE_ENV: Environment;
+  NODE_ENV: Environment;
   PORT: number;
   fallbackLanguage: string;
   MONGO_URI: string;

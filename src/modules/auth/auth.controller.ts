@@ -10,6 +10,7 @@ import {
   HttpStatus,
   Ip,
   Headers,
+  Logger,
 } from '@nestjs/common';
 import type { Response } from 'express';
 import { AuthService } from './auth.service';
@@ -36,11 +37,12 @@ import { API_TAGS } from '@common/swagger';
 @ApiTags(API_TAGS.AUTH)
 @Controller('auth')
 export class AuthController {
+  private readonly logger = new Logger(AuthController.name);
   constructor(
     private readonly authService: AuthService,
     private readonly customI18nService: CustomI18nService,
     private readonly configService: ConfigService<EnvironmentVariables>,
-  ) { }
+  ) {}
 
   @UseInterceptors(ResponseInterceptor)
   @Post('/register')
@@ -51,7 +53,11 @@ export class AuthController {
     @Res({ passthrough: true }) res: Response,
     @Headers('user-agent') userAgent?: string,
   ): Promise<AuthResponseDto> {
-    const result = await this.authService.register(registerAuthDto, ip, userAgent);
+    const result = await this.authService.register(
+      registerAuthDto,
+      ip,
+      userAgent,
+    );
     this.setRefreshTokenCookie(res, result.refreshToken);
     return result;
   }
@@ -80,7 +86,11 @@ export class AuthController {
     @Res({ passthrough: true }) res: Response,
     @Headers('user-agent') userAgent?: string,
   ): Promise<AuthTokens> {
-    const tokens = await this.authService.refresh(refreshTokenDto.refreshToken, ip, userAgent);
+    const tokens = await this.authService.refresh(
+      refreshTokenDto.refreshToken,
+      ip,
+      userAgent,
+    );
     this.setRefreshTokenCookie(res, tokens.refreshToken);
     return tokens;
   }

@@ -5,7 +5,8 @@ import { RefreshTokenDto } from '../dto/refresh-token.dto';
 export const RefreshTokenSwagger = applyDecorators(
   ApiOperation({
     summary: 'Refresh access token',
-    description: 'Generate a new access token using a valid refresh token. The old refresh token is rotated (revoked) and a new one is issued.',
+    description:
+      'Generate a new access token using a valid refresh token. The old refresh token is rotated (revoked) and a new one is issued.',
   }),
   ApiResponse({
     status: 200,
@@ -38,7 +39,10 @@ export const RefreshTokenSwagger = applyDecorators(
                 type: 'object',
                 properties: {
                   field: { type: 'string', example: 'refreshToken' },
-                  message: { type: 'string', example: 'Refresh token is required.' },
+                  message: {
+                    type: 'string',
+                    example: 'Refresh token is required.',
+                  },
                 },
                 required: ['message'],
               },
@@ -50,19 +54,34 @@ export const RefreshTokenSwagger = applyDecorators(
           TokenRequired: {
             summary: 'Refresh token is missing',
             value: {
-              errors: [{ field: 'refreshToken', message: 'Refresh token is required.' }],
+              errors: [
+                {
+                  field: 'refreshToken',
+                  message: 'Refresh token is required.',
+                },
+              ],
             },
           },
           TokenMustBeString: {
             summary: 'Refresh token is not a string',
             value: {
-              errors: [{ field: 'refreshToken', message: 'Refresh token must be a valid string.' }],
+              errors: [
+                {
+                  field: 'refreshToken',
+                  message: 'Refresh token must be a valid string.',
+                },
+              ],
             },
           },
           TokenTooShort: {
             summary: 'Refresh token is too short (min 10 chars)',
             value: {
-              errors: [{ field: 'refreshToken', message: 'Refresh token must be at least 10 characters long.' }],
+              errors: [
+                {
+                  field: 'refreshToken',
+                  message: 'Refresh token must be at least 10 characters long.',
+                },
+              ],
             },
           },
         },

@@ -46,7 +46,12 @@ export const LoginSwagger = applyDecorators(
           InvalidEmail: {
             summary: 'Email format is invalid',
             value: {
-              errors: [{ field: 'email', message: 'Please enter a valid email address.' }],
+              errors: [
+                {
+                  field: 'email',
+                  message: 'Please enter a valid email address.',
+                },
+              ],
             },
           },
           PasswordRequired: {
@@ -58,7 +63,13 @@ export const LoginSwagger = applyDecorators(
           PasswordTooLong: {
             summary: 'Password exceeds maximum length',
             value: {
-              errors: [{ field: 'password', message: 'Password is too long. Maximum length is 72 characters.' }],
+              errors: [
+                {
+                  field: 'password',
+                  message:
+                    'Password is too long. Maximum length is 72 characters.',
+                },
+              ],
             },
           },
         },

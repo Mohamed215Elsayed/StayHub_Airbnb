@@ -13,9 +13,7 @@ import { PinoLogger } from './pino.logger';
 
 @Injectable()
 export class LoggerInterceptor implements NestInterceptor {
-  constructor(
-    @Inject(PinoLogger) private readonly logger: PinoLogger,
-  ) {}
+  constructor(@Inject(PinoLogger) private readonly logger: PinoLogger) {}
 
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
     const req = context.switchToHttp().getRequest<Request>();
@@ -103,7 +101,10 @@ export class LoggerInterceptor implements NestInterceptor {
           this.logger.warn(JSON.stringify(logData), 'HTTP-DETAIL');
         } else {
           this.logger.log(message, 'HTTP');
-          if (process.env.LOG_LEVEL === 'debug' || process.env.LOG_LEVEL === 'verbose') {
+          if (
+            process.env.LOG_LEVEL === 'debug' ||
+            process.env.LOG_LEVEL === 'verbose'
+          ) {
             this.logger.debug(JSON.stringify(logData), 'HTTP-DETAIL');
           }
         }

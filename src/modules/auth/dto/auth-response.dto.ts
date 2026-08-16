@@ -16,7 +16,7 @@ export class AuthResponseDto {
     description: 'Authenticated user data (excluding sensitive fields)',
   })
   @Expose()
-  user!: UserResponseDto; 
+  user!: UserResponseDto;
 
   @ApiProperty({
     example:

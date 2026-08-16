@@ -63,7 +63,11 @@ export class AuthService {
     return tokens;
   }
 
-  async logout(userId: string, ipAddress?: string, userAgent?: string): Promise<void> {
+  async logout(
+    userId: string,
+    ipAddress?: string,
+    userAgent?: string,
+  ): Promise<void> {
     this.logger.log(`Logout attempt for user: ${userId}`);
     await this.logoutUseCase.execute(userId, ipAddress, userAgent);
     this.logger.log(`User logged out successfully: ${userId}`);

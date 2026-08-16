@@ -13,7 +13,7 @@ export const CreateUserSwagger = applyDecorators(
   ApiResponse({
     status: 201,
     description: 'User created successfully.',
-    type: UserResponseDto, 
+    type: UserResponseDto,
   }),
   ApiResponse({
     status: 400,

@@ -38,10 +38,31 @@ export class CustomExceptionFilter implements ExceptionFilter {
       });
     }
 
+    // Handle built-in Nest HTTP exceptions (e.g. NotFoundException)
+    if (
+      typeof exception === 'object' &&
+      exception !== null &&
+      'status' in exception
+    ) {
+      const httpException = exception as { status: number; message: unknown };
+      return response.status(httpException.status).json({
+        errors: [
+          {
+            message:
+              typeof httpException.message === 'string'
+                ? httpException.message
+                : 'An error occurred',
+          },
+        ],
+      });
+    }
+
     // Unknown exceptions
     this.logger.error(exception instanceof Error ? exception.stack : exception);
     response.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
-      errors: [{ message: this.i18nService.translate('error.INTERNAL_SERVER_ERROR') }],
+      errors: [
+        { message: this.i18nService.translate('error.INTERNAL_SERVER_ERROR') },
+      ],
     });
   }
 }

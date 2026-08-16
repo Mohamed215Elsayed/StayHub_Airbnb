@@ -14,6 +14,7 @@ export class SwaggerConfig {
       .setVersion('1.0')
       .addTag(API_TAGS.AUTH)
       .addTag(API_TAGS.USERS)
+      .addTag(API_TAGS.COUNTRIES)
       .addBearerAuth() // هتحتاجها قريب عشان JWT
       .build();
     // خيارات إنشاء المستند (عشان الأسماء تبقى قصيرة)

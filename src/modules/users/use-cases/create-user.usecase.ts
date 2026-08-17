@@ -1,34 +1,24 @@
 import { Injectable } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import * as argon2 from 'argon2';
-import { Model } from 'mongoose';
 import { plainToInstance } from 'class-transformer';
-import { User, UserDocument } from '../schemas/user.schema';
 import { CustomConflictException } from '@common/error-handling/custom-exceptions/conflict.exception';
 import { CreateUserDto } from '../dto/create-user.dto';
 import { UserResponseDto } from '../dto/user-response.dto';
+import { hash } from '@common/utils/hash.util';
+import { UserRepository } from '../repository/user.repository';
 
 @Injectable()
 export class CreateUserUseCase {
-  constructor(
-    @InjectModel(User.name) private readonly usersModel: Model<UserDocument>,
-  ) {}
-  async execute(createUserDto: CreateUserDto): Promise<UserResponseDto> {
-    const existingUser = await this.usersModel
-      .findOne({
-        $or: [
-          { email: createUserDto.email },
-          { phoneNumber: createUserDto.phoneNumber },
-        ],
-      })
-      .lean()
-      .exec();
+  constructor(private readonly userRepository: UserRepository) {}
+  async execute(body: CreateUserDto): Promise<UserResponseDto> {
+    const existingUser = await this.userRepository.findOne({
+      $or: [{ email: body.email }, { phoneNumber: body.phoneNumber }],
+    });
 
     if (existingUser) {
-      if (existingUser.email === createUserDto.email) {
+      if (existingUser.email === body.email) {
         throw new CustomConflictException('error.EMAIL_ALREADY_REGISTERED');
       }
-      if (existingUser.phoneNumber === createUserDto.phoneNumber) {
+      if (existingUser.phoneNumber === body.phoneNumber) {
         throw new CustomConflictException(
           'error.PHONE_NUMBER_ALREADY_REGISTERED',
         );
@@ -36,18 +26,13 @@ export class CreateUserUseCase {
       throw new CustomConflictException('error.USER_ALREADY_EXISTS');
     }
 
-    const passwordHash = await argon2.hash(createUserDto.password, {
-      type: argon2.argon2id,
-      memoryCost: 65536,
-      timeCost: 3,
-      parallelism: 1,
-    });
+    const passwordHash = await hash(body.password);
 
     try {
-      const user = await this.usersModel.create({
-        name: createUserDto.name,
-        email: createUserDto.email,
-        phoneNumber: createUserDto.phoneNumber,
+      const user = await this.userRepository.create({
+        name: body.name,
+        email: body.email,
+        phoneNumber: body.phoneNumber,
         password: passwordHash,
       });
       return plainToInstance(UserResponseDto, user.toJSON(), {

@@ -6,7 +6,7 @@ import { UserResponseDto } from './dto/user-response.dto';
 import { CreateUserSwagger } from './swagger/create-user.swagger';
 import { API_TAGS } from '@common/swagger';
 
-@ApiTags(API_TAGS.AUTH)
+@ApiTags(API_TAGS.USERS)
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}

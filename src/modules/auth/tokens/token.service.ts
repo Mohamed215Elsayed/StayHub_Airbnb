@@ -1,14 +1,14 @@
 import { Injectable } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
 import { ConfigService } from '@nestjs/config';
 import { JwtService, JwtSignOptions } from '@nestjs/jwt';
-import { Model } from 'mongoose';
-import * as argon2 from 'argon2';
-import { RefreshToken } from '../schemas/refresh-token.schema';
+import { RefreshToken } from '../schema/refresh-token.schema';
 import { JwtPayload, RefreshTokenPayload } from '../interfaces/auth.interface';
 import { CustomUnauthorizedException } from '@common/error-handling/custom-exceptions/unauthorized.exception';
 import { EnvironmentVariables } from '@common/configuration/environment.interface';
 import { parseDurationToMs } from '@common/utils/parse-duration';
+import { hash, verify } from '@common/utils/hash.util';
+import { RefreshTokenRepository } from '../repository/refresh-token.repository';
+import { Types } from 'mongoose';
 
 /**
  * Service responsible for JWT token generation, verification, and refresh token persistence.
@@ -28,8 +28,7 @@ export class TokenService {
   constructor(
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService<EnvironmentVariables>,
-    @InjectModel(RefreshToken.name)
-    private readonly refreshTokenModel: Model<RefreshToken>,
+    private readonly refreshTokenRepository: RefreshTokenRepository,
   ) {}
 
   /**
@@ -86,7 +85,7 @@ export class TokenService {
   /**
    * Hashes and persists a refresh token to the database.
    *
-   * The raw refresh token is hashed using Argon2id before storage.
+   * The raw refresh token is hashed using scrypt before storage.
    * This ensures that a database breach does not expose usable refresh tokens.
    *
    * @param userId - The MongoDB ObjectId of the user (as string).
@@ -101,15 +100,15 @@ export class TokenService {
     ipAddress?: string,
     userAgent?: string,
   ): Promise<string> {
-    const hashedToken = await argon2.hash(refreshToken);
+    const hashedToken = await hash(refreshToken);
     const expiresIn = this.configService.get<string>(
       'REFRESH_TOKEN_EXPIRE_IN',
       '30d',
     );
     const expiresAt = new Date(Date.now() + parseDurationToMs(expiresIn));
 
-    await this.refreshTokenModel.create({
-      userId,
+    await this.refreshTokenRepository.create({
+      userId: new Types.ObjectId(userId),
       refreshToken: hashedToken,
       ipAddress,
       userAgent,
@@ -123,7 +122,7 @@ export class TokenService {
    * Verifies a refresh token against stored (hashed) tokens for a user.
    *
    * Iterates over all non-expired tokens belonging to the user and
-   * uses Argon2 verification to find a match.
+   * uses scrypt verification to find a match.
    *
    * @param userId - The MongoDB ObjectId of the user (as string).
    * @param refreshToken - The raw JWT refresh token to match against stored hashes.
@@ -133,14 +132,13 @@ export class TokenService {
     userId: string,
     refreshToken: string,
   ): Promise<RefreshTokenPayload | null> {
-    const tokens = await this.refreshTokenModel
-      .find({ userId, expiresAt: { $gt: new Date() } })
-      .select('+refreshToken')
-      .sort({ createdAt: -1 })
-      .exec();
+    const tokens = await this.refreshTokenRepository.find(
+      { userId: new Types.ObjectId(userId), expiresAt: { $gt: new Date() } },
+      { projection: '+refreshToken', sort: { createdAt: -1 } },
+    );
 
     for (const token of tokens) {
-      if (await argon2.verify(token.refreshToken, refreshToken)) {
+      if (await verify(token.refreshToken, refreshToken)) {
         return {
           sub: userId,
           email: '',
@@ -161,7 +159,7 @@ export class TokenService {
    * @param tokenId - The MongoDB ObjectId of the RefreshToken document.
    */
   async revokeRefreshToken(tokenId: string): Promise<void> {
-    await this.refreshTokenModel.findByIdAndDelete(tokenId);
+    await this.refreshTokenRepository.findByIdAndDelete(tokenId);
   }
 
   /**
@@ -172,6 +170,6 @@ export class TokenService {
    * @param userId - The MongoDB ObjectId of the user (as string).
    */
   async revokeAllUserTokens(userId: string): Promise<void> {
-    await this.refreshTokenModel.deleteMany({ userId });
+    await this.refreshTokenRepository.deleteMany({ userId: new Types.ObjectId(userId) });
   }
 }

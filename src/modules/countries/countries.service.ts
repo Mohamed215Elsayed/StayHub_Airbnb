@@ -10,7 +10,8 @@ import { FindOneCountryUsecase } from './use-cases/find-one-country.usecase';
 import { UpdateCountryUsecase } from './use-cases/update-country.usecase';
 import { UpdateCountryDto } from './dtos/update-country.dto';
 import { QueryFilter } from 'mongoose';
-import { Country } from './schema/country.schema';
+import { Country } from './schemas/country.schema';
+import { PaginatedResult } from '@common/data-access';
 
 @Injectable()
 export class CountriesService {
@@ -41,7 +42,7 @@ export class CountriesService {
     return result;
   }
 
-  async findAll(query: FindAllDto): Promise<CountryResponseDto[]> {
+  async findAll(query: FindAllDto): Promise<PaginatedResult<CountryResponseDto>> {
     this.logger.log('Find all countries request received');
     const result = await this.findAllCountriesUsecase.execute(query);
     this.logger.log('Find all countries request completed');

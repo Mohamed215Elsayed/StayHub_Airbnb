@@ -12,13 +12,15 @@ import { MongooseModule } from '@nestjs/mongoose';
 import {
   RefreshToken,
   RefreshTokenSchema,
-} from './schemas/refresh-token.schema';
+} from './schema/refresh-token.schema';
 import { RegisterUseCase } from './use-cases/register.usecase';
 import { GenerateTokensAndSaveUseCase } from './use-cases/generateTokensAndSave.usecase';
 import { LoginUseCase } from './use-cases/login.usecase';
 import { RefreshTokenUseCase } from './use-cases/refresh-token.usecase';
 import { LogoutUseCase } from './use-cases/logout.usecase';
 import { CoreModule } from '../../core.module';
+import { ModelNames } from '@common/data-access';
+import { RefreshTokenRepository } from './repository/refresh-token.repository';
 
 @Module({
   controllers: [AuthController],
@@ -32,8 +34,15 @@ import { CoreModule } from '../../core.module';
     LoginUseCase,
     RefreshTokenUseCase,
     LogoutUseCase,
+    RefreshTokenRepository,
   ],
-  exports: [JwtModule, TokenService, JwtAuthGuard, ResponseInterceptor],
+  exports: [
+    JwtModule,
+    TokenService,
+    JwtAuthGuard,
+    ResponseInterceptor,
+    RefreshTokenRepository,
+  ],
   imports: [
     CoreModule,
     UsersModule,
@@ -52,7 +61,7 @@ import { CoreModule } from '../../core.module';
       inject: [ConfigService],
     }),
     MongooseModule.forFeature([
-      { name: RefreshToken.name, schema: RefreshTokenSchema },
+      { name: ModelNames.REFRESH_TOKENS, schema: RefreshTokenSchema },
     ]),
   ],
 })

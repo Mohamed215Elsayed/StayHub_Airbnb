@@ -1,20 +1,15 @@
 import { Injectable } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
-import { User, UserDocument } from './schemas/user.schema';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UserResponseDto } from './dto/user-response.dto';
+import { UserDocument } from './schemas/user.schema';
 import { CustomNotFoundException } from '@common/error-handling/custom-exceptions/not-found.exception';
 import { CreateUserUseCase } from './use-cases/create-user.usecase';
+import { UserRepository } from './repository/user.repository';
 
-/**
- * Service handling user-related read operations (findOne, findOneOrFail)
- * and delegating user creation to {@link CreateUserUseCase}.
- */
 @Injectable()
 export class UsersService {
   constructor(
-    @InjectModel(User.name) private readonly usersModel: Model<UserDocument>,
+    private readonly userRepository: UserRepository,
     private readonly createUserUseCase: CreateUserUseCase,
   ) {}
 
@@ -74,30 +69,11 @@ export class UsersService {
     updatedAt: Date;
   } | null>;
 
-  /**
-   * Finds a single user matching the given query (document variant).
-   *
-   * Returns a full Mongoose document (without the `password` field) when
-   * `lean` is omitted or falsy.
-   *
-   * @param query  - A Mongoose-compatible query filter.
-   * @param options - `includePassword` keeps the hashed password field.
-   */
   async findOne(
     query: Record<string, unknown>,
     options?: { includePassword?: boolean; lean?: boolean },
   ): Promise<UserDocument | null>;
 
-  /**
-   * Implementation of the overloaded `findOne` method.
-   *
-   * Builds a Mongoose query with optional `password` exclusion and
-   * optional `.lean()` transformation.
-   *
-   * @param query  - A Mongoose-compatible query filter.
-   * @param options - `includePassword` and/or `lean` flags.
-   * @returns A Mongoose document (default) or a lean serialized object.
-   */
   async findOne(
     query: Record<string, unknown>,
     options?: { includePassword?: boolean; lean?: boolean },
@@ -113,14 +89,8 @@ export class UsersService {
       }
     | null
   > {
-    let queryBuilder: any = this.usersModel.findOne(query);
-    if (!options?.includePassword) {
-      queryBuilder = queryBuilder.select('-password');
-    }
-    if (options?.lean) {
-      queryBuilder = queryBuilder.lean();
-    }
-    return queryBuilder.exec();
+    const select = options?.includePassword ? undefined : '-password';
+    return this.userRepository.findOne(query, { lean: options?.lean }, select);
   }
 
   /**
@@ -151,7 +121,6 @@ export class UsersService {
     options?: { includePassword?: boolean; lean?: boolean },
   ): Promise<UserDocument>;
 
-  /** Implementation — delegates to {@link findOne} and throws if null. */
   async findOneOrFail(
     query: Record<string, unknown>,
     options?: { includePassword?: boolean; lean?: boolean },
@@ -172,4 +141,4 @@ export class UsersService {
     }
     return user;
   }
-}
+  }

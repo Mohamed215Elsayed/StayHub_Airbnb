@@ -23,7 +23,7 @@ async function bootstrap() {
       whitelist: true,
       forbidNonWhitelisted: true,
       transform: true,
-    }),
+    }) as any,
   );
 
   SwaggerConfig.setup(app);

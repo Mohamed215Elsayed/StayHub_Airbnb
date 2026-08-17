@@ -45,7 +45,7 @@ export class RefreshTokenUseCase {
     await this.tokenService.revokeRefreshToken(matchedToken.tokenId);
 
     return this.generateTokensAndSaveUseCase.execute(
-      user.id,
+      user._id.toString(),
       user.email,
       ipAddress,
       userAgent,

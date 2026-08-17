@@ -1,26 +1,23 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { Country, CountryDocument } from '../schema/country.schema';
-import { Model } from 'mongoose';
 import { plainToInstance } from 'class-transformer';
 import { CustomConflictException } from '@common/error-handling/custom-exceptions/conflict.exception';
 import { UpdateCountryDto } from '../dtos/update-country.dto';
 import { CountryResponseDto } from '../dtos/country-response.dto';
 import { FindOneCountryUsecase } from './find-one-country.usecase';
+import { CountryRepository } from '../repository/country.repository';
 
 @Injectable()
 export class UpdateCountryUsecase {
   private readonly logger = new Logger(UpdateCountryUsecase.name);
 
   constructor(
-    @InjectModel(Country.name)
-    private readonly countryModel: Model<CountryDocument>,
+    private readonly countryRepository: CountryRepository,
     private readonly findOneCountryUsecase: FindOneCountryUsecase,
   ) {}
 
   async execute(
     id: string,
-    updateCountryDto: UpdateCountryDto,
+    body: UpdateCountryDto,
   ): Promise<CountryResponseDto> {
     this.logger.log(`Updating country with id: ${id}`);
 
@@ -29,27 +26,25 @@ export class UpdateCountryUsecase {
       throw new CustomConflictException('error.COUNTRY_NOT_FOUND');
     }
 
-    if (updateCountryDto.name) {
+    if (body.name) {
       const duplicateByName = await this.findOneCountryUsecase.execute({
-        name: updateCountryDto.name,
+        name: body.name,
       });
       if (duplicateByName && duplicateByName.id !== id) {
-        this.logger.warn(
-          `Duplicate country name during update: ${updateCountryDto.name}`,
-        );
+        this.logger.warn(`Duplicate country name during update: ${body.name}`);
         throw new CustomConflictException(
           'error.COUNTRY_NAME_ALREADY_REGISTERED',
         );
       }
     }
 
-    if (updateCountryDto.countryCode) {
+    if (body.countryCode) {
       const duplicateByCode = await this.findOneCountryUsecase.execute({
-        countryCode: updateCountryDto.countryCode,
+        countryCode: body.countryCode,
       });
       if (duplicateByCode && duplicateByCode.id !== id) {
         this.logger.warn(
-          `Duplicate country code during update: ${updateCountryDto.countryCode}`,
+          `Duplicate country code during update: ${body.countryCode}`,
         );
         throw new CustomConflictException(
           'error.COUNTRY_CODE_ALREADY_REGISTERED',
@@ -57,14 +52,9 @@ export class UpdateCountryUsecase {
       }
     }
 
-    const updated = await this.countryModel
-      .findByIdAndUpdate(
-        id,
-        { $set: updateCountryDto },
-        { returnDocument: 'after' },
-      )
-      .lean()
-      .exec();
+    const updated = await this.countryRepository.findByIdAndUpdate(id, {
+      $set: body,
+    });
 
     if (!updated) {
       this.logger.warn(`Country not found for update with id: ${id}`);

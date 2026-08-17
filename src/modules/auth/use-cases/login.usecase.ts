@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { LoginAuthDto } from '../dto/login-auth.dto';
 import { CustomUnauthorizedException } from '@common/error-handling/custom-exceptions/unauthorized.exception';
-import * as argon2 from 'argon2';
+import { verify } from '@common/utils/hash.util';
 import { UsersService } from '@modules/users/users.service';
 import { GenerateTokensAndSaveUseCase } from './generateTokensAndSave.usecase';
 import { AuthResponseDto } from '../dto/auth-response.dto';
@@ -25,19 +25,19 @@ export class LoginUseCase {
       { includePassword: true },
     );
 
-    if (!user || !(await argon2.verify(user.password, password))) {
+    if (!user || !(await verify(user.password, password))) {
       throw new CustomUnauthorizedException('error.INVALID_CREDENTIALS');
     }
 
     const tokens = await this.generateTokensAndSaveUseCase.execute(
-      user.id,
+      user._id.toString(),
       user.email,
       ipAddress,
       userAgent,
     );
     return plainToInstance(AuthResponseDto, {
       user: {
-        id: user.id,
+        id: user._id.toString(),
         name: user.name,
         email: user.email,
         phoneNumber: user.phoneNumber,

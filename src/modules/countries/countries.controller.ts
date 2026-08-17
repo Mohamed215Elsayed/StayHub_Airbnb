@@ -26,6 +26,7 @@ import {
 import { CountryIdDto } from './dtos/country-id.dto';
 import { FindAllDto } from './dtos/find-all.dto';
 import { UpdateCountryDto } from './dtos/update-country.dto';
+import { PaginatedResult } from '@common/data-access';
 
 @ApiTags(API_TAGS.COUNTRIES)
 @Controller('countries')
@@ -57,7 +58,7 @@ export class CountriesController {
 
   @FindAllCountriesSwagger()
   @Get()
-  async findAll(@Query() query: FindAllDto): Promise<CountryResponseDto[]> {
+  async findAll(@Query() query: FindAllDto): Promise<PaginatedResult<CountryResponseDto>>  {
     this.logger.log('Getting all countries');
     return this.countriesService.findAll(query);
   }

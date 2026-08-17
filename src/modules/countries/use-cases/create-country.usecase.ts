@@ -1,26 +1,20 @@
 import { Injectable } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
 import { plainToInstance } from 'class-transformer';
-import { Country, CountryDocument } from '../schema/country.schema';
 import { CustomConflictException } from '@common/error-handling/custom-exceptions/conflict.exception';
 import { CreateCountryDto } from '../dtos/create-country.dto';
 import { CountryResponseDto } from '../dtos/country-response.dto';
+import { CountryRepository } from '../repository/country.repository';
+import { Country } from '../schemas/country.schema';
 
 @Injectable()
 export class CreateCountryUsecase {
-  constructor(
-    @InjectModel(Country.name)
-    private readonly countryModel: Model<CountryDocument>,
-  ) {}
+  constructor(private readonly countryRepository: CountryRepository) { }
 
-  async execute(
-    createCountryDto: CreateCountryDto,
-  ): Promise<CountryResponseDto> {
-    const existingByName = await this.countryModel
-      .findOne({ name: createCountryDto.name, isDeleted: false })
-      .lean()
-      .exec();
+  async execute(body: CreateCountryDto): Promise<CountryResponseDto> {
+    const existingByName = await this.countryRepository.findOne({
+      name: body.name,
+      isDeleted: false,
+    });
 
     if (existingByName) {
       throw new CustomConflictException(
@@ -28,14 +22,11 @@ export class CreateCountryUsecase {
       );
     }
 
-    if (createCountryDto.countryCode) {
-      const existingByCode = await this.countryModel
-        .findOne({
-          countryCode: createCountryDto.countryCode,
-          isDeleted: false,
-        })
-        .lean()
-        .exec();
+    if (body.countryCode) {
+      const existingByCode = await this.countryRepository.findOne({
+        countryCode: body.countryCode,
+        isDeleted: false,
+      });
       if (existingByCode) {
         throw new CustomConflictException(
           'error.COUNTRY_CODE_ALREADY_REGISTERED',
@@ -45,13 +36,13 @@ export class CreateCountryUsecase {
 
     try {
       const doc: Partial<Country> = {
-        name: createCountryDto.name,
+        name: body.name,
       };
-      if (createCountryDto.countryCode) {
-        doc.countryCode = createCountryDto.countryCode;
+      if (body.countryCode) {
+        doc.countryCode = body.countryCode;
       }
 
-      const country = await this.countryModel.create(doc);
+      const country = await this.countryRepository.create(doc);
 
       const plain = country.toObject();
       const result = plainToInstance(CountryResponseDto, plain, {

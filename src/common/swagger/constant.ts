@@ -3,4 +3,5 @@ export enum API_TAGS {
   USERS = 'Users',
   COUNTRIES = 'Countries',
   CITIES = 'Cities',
+  CURRENCIES = 'Currencies',
 }

@@ -16,11 +16,12 @@ export class SwaggerConfig {
       .addTag(API_TAGS.USERS)
       .addTag(API_TAGS.COUNTRIES)
       .addTag(API_TAGS.CITIES)
-      .addBearerAuth() // هتحتاجها قريب عشان JWT
+      .addTag(API_TAGS.CURRENCIES)
+      .addBearerAuth()
       .build();
-    // خيارات إنشاء المستند (عشان الأسماء تبقى قصيرة)
+
     const options: SwaggerDocumentOptions = {
-      ignoreGlobalPrefix: false, //عشان تظهر /api قدام كل Route
+      ignoreGlobalPrefix: false,
       operationIdFactory: (controllerKey: string, methodKey: string) =>
         methodKey,
       // deepScanRoutes: true, // لو عندك Modules جوه Modules

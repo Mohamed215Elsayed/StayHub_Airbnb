@@ -8,7 +8,7 @@ import { Country } from '../schemas/country.schema';
 
 @Injectable()
 export class CreateCountryUsecase {
-  constructor(private readonly countryRepository: CountryRepository) { }
+  constructor(private readonly countryRepository: CountryRepository) {}
 
   async execute(body: CreateCountryDto): Promise<CountryResponseDto> {
     const existingByName = await this.countryRepository.findOne({

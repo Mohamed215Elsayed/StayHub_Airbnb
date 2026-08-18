@@ -8,22 +8,22 @@ import { plainToInstance } from 'class-transformer';
 
 @Injectable()
 export class UpdateCityUsecase {
-    constructor(private readonly cityRepository: CityRepository) { }
-    async execute(cityId: string, body: UpdateCityDto): Promise<CityResponseDto> {
-        const city = await this.cityRepository.findOne({
-            _id: cityId,
-            isDeleted: false,
-        });
-        if (!city) throw new CustomNotFoundException('error.CITY_NOT_FOUND');
+  constructor(private readonly cityRepository: CityRepository) {}
+  async execute(cityId: string, body: UpdateCityDto): Promise<CityResponseDto> {
+    const city = await this.cityRepository.findOne({
+      _id: cityId,
+      isDeleted: false,
+    });
+    if (!city) throw new CustomNotFoundException('error.CITY_NOT_FOUND');
 
-        const existingCityByName = await this.cityRepository.findOne({
-            name: body.name,
-            country: city.country,
-            isDeleted: false,
-            _id: { $ne: cityId },
-        });
-        if (existingCityByName)
-            throw new CustomConflictException('error.CITY_ALREADY_EXISTS');
+    const existingCityByName = await this.cityRepository.findOne({
+      name: body.name,
+      country: city.country,
+      isDeleted: false,
+      _id: { $ne: cityId },
+    });
+    if (existingCityByName)
+      throw new CustomConflictException('error.CITY_ALREADY_EXISTS');
 
     const updatedCity = await this.cityRepository.findByIdAndUpdate(
       cityId,
@@ -37,5 +37,5 @@ export class UpdateCityUsecase {
     return plainToInstance(CityResponseDto, updatedCity.toObject(), {
       excludeExtraneousValues: true,
     });
-    }
+  }
 }

@@ -11,7 +11,6 @@ import { FindOneUsecase } from './use-cases/find-one.usecase';
 import { FindCityByIdUsecase } from './use-cases/find-city-by-id.usecase';
 import { SoftDeleteCityUsecase } from './use-cases/soft-delete-city.usecase';
 
-
 @Injectable()
 export class CitiesService {
   constructor(
@@ -21,8 +20,7 @@ export class CitiesService {
     private readonly findOneUsecase: FindOneUsecase,
     private readonly findCityByIdUsecase: FindCityByIdUsecase,
     private readonly deleteCityUsecase: SoftDeleteCityUsecase,
-
-  ) { }
+  ) {}
 
   async createCity(createCityDto: CreateCityDto): Promise<CityResponseDto> {
     return this.createCityUsecase.execute(createCityDto);
@@ -41,7 +39,9 @@ export class CitiesService {
     return this.updateCityUsecase.execute(cityId, body);
   }
 
-  async findOne(query: Record<string, unknown>): Promise<CityResponseDto | null> {
+  async findOne(
+    query: Record<string, unknown>,
+  ): Promise<CityResponseDto | null> {
     return this.findOneUsecase.execute(query);
   }
 

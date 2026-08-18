@@ -1,26 +1,35 @@
 import { applyDecorators } from '@nestjs/common';
 import { ApiOperation, ApiParam, ApiResponse } from '@nestjs/swagger';
-import { CityResponseDto } from '../dtos/city-response.dto';
+import { CurrencyResponseDto } from '../dtos/currency-response.dto';
 import { ErrorListResponseDto } from '@common/error-handling/dto/error-response.dto';
 
-export function FindCityByIdSwagger() {
+export function DeleteCurrencySwagger() {
   return applyDecorators(
     ApiOperation({
-      summary: 'Get city by ID',
-      description: 'Retrieve a single city by its ID',
+      summary: 'Delete currency by ID',
+      description: 'Delete an existing currency by its MongoDB ID',
     }),
-    ApiParam({ name: 'id', type: String }),
-    ApiResponse({ status: 200, type: CityResponseDto }),
+    ApiParam({
+      name: 'id',
+      description: 'Currency MongoDB ID',
+      type: String,
+      example: '60d21b4967d0d8992e610c85',
+    }),
+    ApiResponse({
+      status: 200,
+      description: 'Currency deleted successfully',
+      type: CurrencyResponseDto,
+    }),
     ApiResponse({
       status: 404,
-      description: 'Not Found - City does not exist',
+      description: 'Not Found - Currency does not exist',
       type: ErrorListResponseDto,
       content: {
         'application/json': {
           examples: {
             NotFound: {
-              summary: 'City not found',
-              value: { errors: [{ message: 'City not found' }] },
+              summary: 'Currency not found',
+              value: { errors: [{ message: 'Currency not found' }] },
             },
           },
         },

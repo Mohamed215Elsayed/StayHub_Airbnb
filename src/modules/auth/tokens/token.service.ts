@@ -170,6 +170,8 @@ export class TokenService {
    * @param userId - The MongoDB ObjectId of the user (as string).
    */
   async revokeAllUserTokens(userId: string): Promise<void> {
-    await this.refreshTokenRepository.deleteMany({ userId: new Types.ObjectId(userId) });
+    await this.refreshTokenRepository.deleteMany({
+      userId: new Types.ObjectId(userId),
+    });
   }
 }

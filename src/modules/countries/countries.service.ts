@@ -42,7 +42,9 @@ export class CountriesService {
     return result;
   }
 
-  async findAll(query: FindAllDto): Promise<PaginatedResult<CountryResponseDto>> {
+  async findAll(
+    query: FindAllDto,
+  ): Promise<PaginatedResult<CountryResponseDto>> {
     this.logger.log('Find all countries request received');
     const result = await this.findAllCountriesUsecase.execute(query);
     this.logger.log('Find all countries request completed');

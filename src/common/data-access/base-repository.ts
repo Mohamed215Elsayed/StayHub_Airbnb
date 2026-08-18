@@ -223,15 +223,16 @@ export class BaseRepository<T> {
    * @param options - Optional Mongoose query options (e.g., `lean`, `sort`, `populate`).
    * @returns An array of matched documents.
    *
-    * @example
-    * const users = await repo.find({ isActive: true });
-    */
-  async find(
-    filterQuery?: Record<string, unknown>,
-    options: FindOptions = {},
-  ) {
+   * @example
+   * const users = await repo.find({ isActive: true });
+   */
+  async find(filterQuery?: Record<string, unknown>, options: FindOptions = {}) {
     const { projection, ...queryOptions } = options;
-    const documents = await this.model.find(filterQuery, projection, queryOptions);
+    const documents = await this.model.find(
+      filterQuery,
+      projection,
+      queryOptions,
+    );
 
     return documents;
   }

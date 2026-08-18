@@ -15,11 +15,22 @@ import { SoftDeleteCityUsecase } from './use-cases/soft-delete-city.usecase';
 
 @Module({
   imports: [
-    MongooseModule.forFeature([{ name: ModelNames.CITIES, schema: CitySchema }]),
+    MongooseModule.forFeature([
+      { name: ModelNames.CITIES, schema: CitySchema },
+    ]),
     CountriesModule,
   ],
   controllers: [CitiesController],
-  providers: [CitiesService, CreateCityUsecase, CityRepository, FindAllCitiesUsecase, UpdateCityUsecase, FindOneUsecase, FindCityByIdUsecase,SoftDeleteCityUsecase],
+  providers: [
+    CitiesService,
+    CreateCityUsecase,
+    CityRepository,
+    FindAllCitiesUsecase,
+    UpdateCityUsecase,
+    FindOneUsecase,
+    FindCityByIdUsecase,
+    SoftDeleteCityUsecase,
+  ],
   exports: [CitiesService, CityRepository],
 })
-export class CitiesModule { }
+export class CitiesModule {}

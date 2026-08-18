@@ -9,8 +9,9 @@ import { PaginatedResult } from '@common/data-access';
 export class FindAllCountriesUsecase {
   constructor(private readonly countryRepository: CountryRepository) {}
 
-  async execute(query: FindAllDto): Promise<PaginatedResult<CountryResponseDto>> {
-    
+  async execute(
+    query: FindAllDto,
+  ): Promise<PaginatedResult<CountryResponseDto>> {
     const matchQuery: Record<string, unknown> = { isDeleted: { $ne: true } };
     if (query?.name) matchQuery.name = { $regex: query.name, $options: 'i' };
     if (query?.countryCode) matchQuery.countryCode = query.countryCode;

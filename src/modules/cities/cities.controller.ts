@@ -15,7 +15,11 @@ import { ApiTags } from '@nestjs/swagger';
 import { API_TAGS } from '@common/swagger';
 import { CreateCityDto } from './dtos/create-city.dto';
 import { CityResponseDto } from './dtos/city-response.dto';
-import { CreateCitySwagger, DeleteCitySwagger, FindCityByIdSwagger } from './swagger';
+import {
+  CreateCitySwagger,
+  DeleteCitySwagger,
+  FindCityByIdSwagger,
+} from './swagger';
 import { FindAllCitiesDto } from './dtos/find-all-cities.dto';
 import { PaginatedResult } from '@common/data-access';
 import { FindAllCitiesSwagger } from './swagger/find-all-cities.swagger';
@@ -25,7 +29,7 @@ import { UpdateCityDto } from './dtos/update-city.dto';
 @ApiTags(API_TAGS.CITIES)
 @Controller('cities')
 export class CitiesController {
-  constructor(private readonly citiesService: CitiesService) { }
+  constructor(private readonly citiesService: CitiesService) {}
 
   @CreateCitySwagger()
   @Post()
@@ -62,4 +66,3 @@ export class CitiesController {
     return this.citiesService.deleteCity(cityId);
   }
 }
-

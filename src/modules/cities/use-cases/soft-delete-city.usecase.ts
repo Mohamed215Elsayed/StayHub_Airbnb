@@ -9,10 +9,9 @@ export class SoftDeleteCityUsecase {
   constructor(private readonly cityRepository: CityRepository) {}
 
   async execute(cityId: string): Promise<CityResponseDto> {
-    const city = await this.cityRepository.findByIdAndUpdate(
-      cityId,
-      { $set: { isDeleted: true, deletedAt: new Date() } },
-    );
+    const city = await this.cityRepository.findByIdAndUpdate(cityId, {
+      $set: { isDeleted: true, deletedAt: new Date() },
+    });
 
     if (!city) {
       throw new CustomNotFoundException('error.CITY_NOT_FOUND');

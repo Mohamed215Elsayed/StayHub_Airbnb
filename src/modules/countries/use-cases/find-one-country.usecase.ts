@@ -6,9 +6,7 @@ import { CountryRepository } from '../repository/country.repository';
 
 @Injectable()
 export class FindOneCountryUsecase {
-  constructor(
-    private readonly countryRepository: CountryRepository,
-  ) {}
+  constructor(private readonly countryRepository: CountryRepository) {}
 
   async execute(
     query: Record<string, unknown>,

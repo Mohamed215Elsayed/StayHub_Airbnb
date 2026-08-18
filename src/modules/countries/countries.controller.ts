@@ -58,7 +58,9 @@ export class CountriesController {
 
   @FindAllCountriesSwagger()
   @Get()
-  async findAll(@Query() query: FindAllDto): Promise<PaginatedResult<CountryResponseDto>>  {
+  async findAll(
+    @Query() query: FindAllDto,
+  ): Promise<PaginatedResult<CountryResponseDto>> {
     this.logger.log('Getting all countries');
     return this.countriesService.findAll(query);
   }

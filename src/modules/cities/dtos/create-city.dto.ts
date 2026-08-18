@@ -7,8 +7,6 @@ import {
   MaxLength,
   IsNotEmpty,
 } from 'class-validator';
-import { Transform, Type } from 'class-transformer';
-import { Types } from 'mongoose';
 
 export class CreateCityDto {
   @ApiProperty({
@@ -32,9 +30,5 @@ export class CreateCityDto {
   })
   @IsDefined()
   @IsMongoId()
-  @Transform(({ value }: { value: unknown }) => {
-    if (typeof value === 'string') return new Types.ObjectId(value);
-    return value;
-  })
-  country!: Types.ObjectId;
+  country!: string;
 }

@@ -30,19 +30,6 @@ export class CityResponseDto {
   country!: string;
 
   @ApiProperty({
-    description: 'Country name',
-    example: 'Egypt',
-  })
-  @Transform(({ obj }: any) => {
-    const raw = obj.country;
-    if (!raw) return '';
-    if (typeof raw === 'object') return raw.name ?? '';
-    return '';
-  })
-  @Expose()
-  countryName?: string;
-
-  @ApiProperty({
     description: 'Creation timestamp',
     example: '2026-01-15T10:30:00.000Z',
   })

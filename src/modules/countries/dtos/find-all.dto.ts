@@ -1,8 +1,8 @@
-import { IsBoolean, IsNumber, IsOptional, IsString, Min } from 'class-validator';
+import { IsOptional, IsString } from 'class-validator';
 import { ApiPropertyOptional } from '@nestjs/swagger';
-import { Type } from 'class-transformer';
+import { PaginationDto } from '@common/data-access/dto/pagination.dto';
 
-export class FindAllDto {
+export class FindAllDto extends PaginationDto {
   @ApiPropertyOptional({
     description: 'Filter by country name',
     example: 'Egypt',
@@ -15,26 +15,4 @@ export class FindAllDto {
   @IsOptional()
   @IsString()
   countryCode!: string;
-
-  @ApiPropertyOptional({ default: 1 })
-  @IsOptional()
-  @IsNumber()
-  @Min(1)
-  @Type(() => Number)
-  page?: number = 1;
-
-  @ApiPropertyOptional({ default: 10 })
-  @IsOptional()
-  @IsNumber()
-  @Min(1)
-  @Type(() => Number)
-  limit?: number = 10;
-
-  @ApiPropertyOptional({
-    description: 'Ignore pagination limit and return all results',
-    example: false,
-  })
-  @IsOptional()
-  @IsBoolean()
-  ignoreLimit?: boolean;
 }

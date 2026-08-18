@@ -11,5 +11,7 @@
     "COUNTRY_ALREADY_EXISTS": "الدولة موجودة بالفعل",
     "COUNTRY_NAME_ALREADY_REGISTERED": "اسم الدولة مسجل بالفعل",
     "COUNTRY_CODE_ALREADY_REGISTERED": "رمز الدولة مسجل بالفعل",
+    "CITY_NOT_FOUND": "المدينة غير موجودة",
+    "CITY_ALREADY_EXISTS": "المدينة موجودة بالفعل في هذه الدولة",
     "INTERNAL_SERVER_ERROR": "خطأ في الخادم الداخلي"
 }

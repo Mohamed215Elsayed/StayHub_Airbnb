@@ -29,6 +29,6 @@ import { CountryRepository } from './repository/country.repository';
     FindOneCountryUsecase,
     UpdateCountryUsecase,
   ],
-  exports: [CountryRepository],
+  exports: [CountryRepository, CountriesService],
 })
 export class CountriesModule {}

@@ -11,5 +11,7 @@
     "COUNTRY_ALREADY_EXISTS": "Country already exists",
     "COUNTRY_NAME_ALREADY_REGISTERED": "Country name is already registered",
     "COUNTRY_CODE_ALREADY_REGISTERED": "Country code is already registered",
+    "CITY_NOT_FOUND": "City not found",
+    "CITY_ALREADY_EXISTS": "City already exists in this country",
     "INTERNAL_SERVER_ERROR": "Internal server error"
 }

@@ -5,6 +5,7 @@ import { AuthModule } from './modules/auth/auth.module';
 import { CountriesModule } from './modules/countries/countries.module';
 import { CitiesModule } from './modules/cities/cities.module';
 import { CurrenciesModule } from '@modules/currencies/currencies.module';
+import { UnitCategoriesModule } from '@modules/unit-categories/unit-categories.module';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { CurrenciesModule } from '@modules/currencies/currencies.module';
     CountriesModule,
     CitiesModule,
     CurrenciesModule,
+    UnitCategoriesModule,
   ],
   providers: [],
 })

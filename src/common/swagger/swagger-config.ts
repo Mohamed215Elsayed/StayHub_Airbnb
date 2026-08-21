@@ -18,6 +18,7 @@ export class SwaggerConfig {
       .addTag(API_TAGS.CITIES)
       .addTag(API_TAGS.CURRENCIES)
       .addTag(API_TAGS.UNIT_CATEGORIES)
+      .addTag(API_TAGS.APP_SETTINGS)
       .addBearerAuth()
       .build();
 

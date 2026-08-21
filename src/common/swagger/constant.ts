@@ -5,4 +5,5 @@ export enum API_TAGS {
   CITIES = 'Cities',
   CURRENCIES = 'Currencies',
   UNIT_CATEGORIES = 'UnitCategories',
+  APP_SETTINGS = 'AppSettings',
 }

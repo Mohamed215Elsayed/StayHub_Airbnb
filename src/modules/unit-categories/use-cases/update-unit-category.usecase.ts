@@ -8,7 +8,9 @@ import { plainToInstance } from 'class-transformer';
 
 @Injectable()
 export class UpdateUnitCategoryUsecase {
-  constructor(private readonly unitCategoryRepository: UnitCategoryRepository) {}
+  constructor(
+    private readonly unitCategoryRepository: UnitCategoryRepository,
+  ) {}
 
   async execute(
     unitCategoryId: string,
@@ -35,17 +37,19 @@ export class UpdateUnitCategoryUsecase {
       }
     }
 
-    const updatedUnitCategory = await this.unitCategoryRepository.findByIdAndUpdate(
-      unitCategoryId,
-      body,
-    );
+    const updatedUnitCategory =
+      await this.unitCategoryRepository.findByIdAndUpdate(unitCategoryId, body);
 
     if (!updatedUnitCategory) {
       throw new CustomNotFoundException('error.UNIT_CATEGORY_NOT_FOUND');
     }
 
-    return plainToInstance(UnitCategoryResponseDto, updatedUnitCategory.toObject(), {
-      excludeExtraneousValues: true,
-    });
+    return plainToInstance(
+      UnitCategoryResponseDto,
+      updatedUnitCategory.toObject(),
+      {
+        excludeExtraneousValues: true,
+      },
+    );
   }
 }

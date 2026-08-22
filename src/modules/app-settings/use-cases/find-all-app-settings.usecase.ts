@@ -6,7 +6,7 @@ import { plainToInstance } from 'class-transformer';
 
 @Injectable()
 export class FindAllAppSettingsUsecase {
-  constructor(private readonly appSettingsRepository: AppSettingsRepository) { }
+  constructor(private readonly appSettingsRepository: AppSettingsRepository) {}
 
   async execute(): Promise<AppSettingsResponseDto> {
     const result = await this.appSettingsRepository.findOne({

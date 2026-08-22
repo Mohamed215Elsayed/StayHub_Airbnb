@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService, JwtSignOptions } from '@nestjs/jwt';
-import { RefreshToken } from '../schema/refresh-token.schema';
 import { JwtPayload, RefreshTokenPayload } from '../interfaces/auth.interface';
 import { CustomUnauthorizedException } from '@common/error-handling/custom-exceptions/unauthorized.exception';
 import { EnvironmentVariables } from '@common/configuration/environment.interface';
@@ -139,10 +138,11 @@ export class TokenService {
 
     for (const token of tokens) {
       if (await verify(token.refreshToken, refreshToken)) {
+        const verifiedPayload = this.jwtService.verify(
+          refreshToken,
+        ) as RefreshTokenPayload;
         return {
-          sub: userId,
-          email: '',
-          type: 'refresh',
+          ...verifiedPayload,
           tokenId: token._id.toString(),
         };
       }

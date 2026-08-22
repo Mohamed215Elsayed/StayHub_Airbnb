@@ -27,10 +27,28 @@ export const validationSchema = Joi.object({
   JWT_SECRET: Joi.string().required().messages({
     'any.required': 'JWT_SECRET is required',
   }),
-  ACCESS_TOKEN_EXPIRE_IN: Joi.string().required().messages({
-    'any.required': 'ACCESS_TOKEN_EXPIRE_IN is required',
+  ACCESS_TOKEN_EXPIRE_IN: Joi.string()
+    .required()
+    .messages({
+      'any.required': 'ACCESS_TOKEN_EXPIRE_IN is required',
+    })
+    .default('7d'),
+  REFRESH_TOKEN_EXPIRE_IN: Joi.string()
+    .required()
+    .messages({
+      'any.required': 'REFRESH_TOKEN_EXPIRE_IN is required',
+    })
+    .default('15d'),
+  // --- System Admin Initialization ---
+  SYSTEM_ADMIN_NAME: Joi.string().required().messages({
+    'any.required': 'SYSTEM_ADMIN_NAME is required for initial admin setup',
   }),
-  REFRESH_TOKEN_EXPIRE_IN: Joi.string().required().messages({
-    'any.required': 'REFRESH_TOKEN_EXPIRE_IN is required',
+  SYSTEM_ADMIN_EMAIL: Joi.string().email().required().messages({
+    'any.required': 'SYSTEM_ADMIN_EMAIL is required',
+    'string.email': 'SYSTEM_ADMIN_EMAIL must be a valid email address',
+  }),
+  SYSTEM_ADMIN_PASSWORD: Joi.string().min(8).required().messages({
+    'any.required': 'SYSTEM_ADMIN_PASSWORD is required',
+    'string.min': 'SYSTEM_ADMIN_PASSWORD must be at least 8 characters long',
   }),
 });

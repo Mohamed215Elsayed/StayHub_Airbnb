@@ -7,6 +7,7 @@ import { CitiesModule } from './modules/cities/cities.module';
 import { CurrenciesModule } from '@modules/currencies/currencies.module';
 import { UnitCategoriesModule } from '@modules/unit-categories/unit-categories.module';
 import { AppSettingsModule } from '@modules/app-settings/app-settings.module';
+import { SystemAdminsModule } from '@modules/system-admins/system-admins.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { AppSettingsModule } from '@modules/app-settings/app-settings.module';
     CurrenciesModule,
     UnitCategoriesModule,
     AppSettingsModule,
+    SystemAdminsModule,
   ],
   providers: [],
 })

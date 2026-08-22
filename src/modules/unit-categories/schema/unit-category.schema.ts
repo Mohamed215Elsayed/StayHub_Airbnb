@@ -14,4 +14,5 @@ export class UnitCategories {
   @Prop()
   deletedAt!: Date;
 }
-export const UnitCategoriesSchema = SchemaFactory.createForClass(UnitCategories);
+export const UnitCategoriesSchema =
+  SchemaFactory.createForClass(UnitCategories);

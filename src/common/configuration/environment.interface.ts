@@ -15,4 +15,18 @@ export interface EnvironmentVariables {
   JWT_SECRET: string;
   ACCESS_TOKEN_EXPIRE_IN: string;
   REFRESH_TOKEN_EXPIRE_IN: string;
+  SYSTEM_ADMIN: ISystemAdmin;
+}
+
+export interface ISystemAdmin {
+  name: string;
+  email: string;
+  password: string;
+  // role?: string;              // 'super-admin' | 'admin' | 'support'
+  // phone?: string;
+  // isActive: boolean;
+  // isVerified: boolean;
+  // totpEnabled: boolean;
+  // timezone: string;
+  // metadata?: Record<string, any>;
 }

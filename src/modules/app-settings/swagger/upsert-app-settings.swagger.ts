@@ -21,11 +21,17 @@ export function UpsertAppSettingsSwagger() {
           examples: {
             VatRateInvalid: {
               summary: 'VAT rate must be between 0 and 25',
-              value: { errors: [{ message: 'vatRate must be between 0 and 25' }] },
+              value: {
+                errors: [{ message: 'vatRate must be between 0 and 25' }],
+              },
             },
             MinPriceInvalid: {
               summary: 'Minimum price must be greater than or equal to 0',
-              value: { errors: [{ message: 'minPrice must be greater than or equal to 0' }] },
+              value: {
+                errors: [
+                  { message: 'minPrice must be greater than or equal to 0' },
+                ],
+              },
             },
           },
         },

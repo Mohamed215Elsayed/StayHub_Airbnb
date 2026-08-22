@@ -9,7 +9,9 @@ import { plainToInstance } from 'class-transformer';
 
 @Injectable()
 export class FindAllUnitCategoriesUsecase {
-  constructor(private readonly unitCategoryRepository: UnitCategoryRepository) { }
+  constructor(
+    private readonly unitCategoryRepository: UnitCategoryRepository,
+  ) {}
 
   async execute(
     query: FindAllDto,

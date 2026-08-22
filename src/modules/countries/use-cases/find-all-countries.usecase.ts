@@ -12,7 +12,7 @@ export class FindAllCountriesUsecase {
   async execute(
     query: FindAllDto,
   ): Promise<PaginatedResult<CountryResponseDto>> {
-    const matchQuery: Record<string, unknown> = { isDeleted: { $ne: true } };
+    const matchQuery: Record<string, unknown> = { isDeleted: false };
     if (query?.name) matchQuery.name = { $regex: query.name, $options: 'i' };
     if (query?.countryCode) matchQuery.countryCode = query.countryCode;
 

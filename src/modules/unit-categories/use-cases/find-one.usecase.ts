@@ -5,7 +5,9 @@ import { plainToInstance } from 'class-transformer';
 
 @Injectable()
 export class FindOneUsecase {
-  constructor(private readonly unitCategoryRepository: UnitCategoryRepository) {}
+  constructor(
+    private readonly unitCategoryRepository: UnitCategoryRepository,
+  ) {}
 
   async execute(
     query: Record<string, unknown>,

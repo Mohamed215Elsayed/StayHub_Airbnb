@@ -28,6 +28,7 @@ async function bootstrap() {
 
   SwaggerConfig.setup(app);
 
+  app.enableShutdownHooks();
   const logger = app.get(PinoLogger);
   logger.log(`Server started on port: ${port}`);
   await app.listen(port);

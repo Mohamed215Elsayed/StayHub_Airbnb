@@ -21,6 +21,8 @@ export class UpsertAppSettingsUseCase {
       { upsert: true, returnDocument: 'after', lean: true },
     );
 
-    return plainToInstance(AppSettingsResponseDto, appSettings);
+    return plainToInstance(AppSettingsResponseDto, appSettings, {
+      excludeExtraneousValues: true,
+    });
   }
 }

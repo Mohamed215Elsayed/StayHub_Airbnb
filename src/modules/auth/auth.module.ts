@@ -13,14 +13,17 @@ import {
   RefreshToken,
   RefreshTokenSchema,
 } from './schema/refresh-token.schema';
-import { RegisterUseCase } from './use-cases/register.usecase';
-import { GenerateTokensAndSaveUseCase } from './use-cases/generateTokensAndSave.usecase';
-import { LoginUseCase } from './use-cases/login.usecase';
-import { RefreshTokenUseCase } from './use-cases/refresh-token.usecase';
+import { RegisterUsecase } from './use-cases/register.usecase';
+import { GenerateTokensAndSaveUsecase } from './use-cases/generateTokensAndSave.usecase';
+import { LoginUsecase } from './use-cases/login.usecase';
+import { RefreshTokenUsecase } from './use-cases/refresh-token.usecase';
 import { LogoutUseCase } from './use-cases/logout.usecase';
 import { CoreModule } from '../../core.module';
 import { ModelNames } from '@common/data-access';
 import { RefreshTokenRepository } from './repository/refresh-token.repository';
+import { LoginAsUserUsecase } from './use-cases/login-as-user.usecase';
+import { LoginAsSystemAdminUsecase } from './use-cases/login-as-system-admin.usecase';
+import { SystemAdminsModule } from '@modules/system-admins/system-admins.module';
 
 @Module({
   controllers: [AuthController],
@@ -29,12 +32,14 @@ import { RefreshTokenRepository } from './repository/refresh-token.repository';
     TokenService,
     JwtAuthGuard,
     ResponseInterceptor,
-    RegisterUseCase,
-    GenerateTokensAndSaveUseCase,
-    LoginUseCase,
-    RefreshTokenUseCase,
+    RegisterUsecase,
+    GenerateTokensAndSaveUsecase,
+    LoginUsecase,
+    RefreshTokenUsecase,
     LogoutUseCase,
     RefreshTokenRepository,
+    LoginAsUserUsecase,
+    LoginAsSystemAdminUsecase,
   ],
   exports: [
     JwtModule,
@@ -42,10 +47,12 @@ import { RefreshTokenRepository } from './repository/refresh-token.repository';
     JwtAuthGuard,
     ResponseInterceptor,
     RefreshTokenRepository,
+    SystemAdminsModule,
   ],
   imports: [
     CoreModule,
     UsersModule,
+    SystemAdminsModule,
     JwtModule.registerAsync({
       imports: [ConfigModule],
       useFactory: (configService: ConfigService<EnvironmentVariables>) =>

@@ -20,7 +20,7 @@ export class UnitCategoriesService {
     private readonly findOneUsecase: FindOneUsecase,
     private readonly findUnitCategoryByIdUsecase: FindUnitCategoryByIdUsecase,
     private readonly deleteUnitCategoryUsecase: SoftDeleteUnitCategoryUsecase,
-  ) { }
+  ) {}
 
   async createUnitCategory(
     body: CreateUnitCategoryDto,
@@ -47,11 +47,15 @@ export class UnitCategoriesService {
     return this.findOneUsecase.execute(query);
   }
 
-  async findUnitCategoryById(unitCategoryId: string): Promise<UnitCategoryResponseDto> {
+  async findUnitCategoryById(
+    unitCategoryId: string,
+  ): Promise<UnitCategoryResponseDto> {
     return this.findUnitCategoryByIdUsecase.execute(unitCategoryId);
   }
 
-  async deleteUnitCategory(unitCategoryId: string): Promise<UnitCategoryResponseDto> {
+  async deleteUnitCategory(
+    unitCategoryId: string,
+  ): Promise<UnitCategoryResponseDto> {
     return this.deleteUnitCategoryUsecase.execute(unitCategoryId);
   }
 }

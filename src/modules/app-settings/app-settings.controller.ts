@@ -1,11 +1,5 @@
 import { API_TAGS } from '@common/swagger';
-import {
-  Body,
-  Controller,
-  Get,
-  Param,
-  Put,
-} from '@nestjs/common';
+import { Body, Controller, Get, Param, Put } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { AppSettingsService } from './app-settings.service';
 import { UpsertAppSettingsDto } from './dtos/upsert-app-settings.dto';

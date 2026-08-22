@@ -22,8 +22,8 @@ export class SystemAdminResponseDto {
   @ApiProperty({ description: 'Is super admin', example: false })
   @Expose()
   isSuperAdmin!: boolean;
-  
- @ApiProperty({
+
+  @ApiProperty({
     enum: Roles,
     example: Roles.SYSTEM_ADMIN,
     description: 'Admin role for authorization',

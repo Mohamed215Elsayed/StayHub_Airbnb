@@ -1,5 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { SystemAdminsService } from '@modules/system-admins/system-admins.service';
+import { SystemAdminRepository } from '@modules/system-admins/repository/system-admin.repository';
 import { CustomUnauthorizedException } from '@common/error-handling/custom-exceptions/unauthorized.exception';
 import { verify } from '@common/utils/hash.util';
 import { GenerateTokensAndSaveUsecase } from './generateTokensAndSave.usecase';
@@ -13,7 +13,7 @@ export class LoginAsSystemAdminUsecase {
   private readonly logger = new Logger(LoginAsSystemAdminUsecase.name);
 
   constructor(
-    private readonly systemAdminService: SystemAdminsService,
+    private readonly systemAdminRepository: SystemAdminRepository,
     private readonly generateTokensAndSaveUsecase: GenerateTokensAndSaveUsecase,
   ) {}
 
@@ -23,9 +23,10 @@ export class LoginAsSystemAdminUsecase {
     userAgent?: string,
   ): Promise<AuthResponseDto> {
     const { email, password } = loginAuthDto;
-    const admin = await this.systemAdminService.findOne(
+    const admin = await this.systemAdminRepository.findOne(
       { email, isDeleted: false },
-      { includePassword: true },
+      undefined,
+      undefined,
     );
 
     if (!admin || !(await verify(admin.password, password))) {

@@ -138,9 +138,7 @@ export class TokenService {
 
     for (const token of tokens) {
       if (await verify(token.refreshToken, refreshToken)) {
-        const verifiedPayload = this.jwtService.verify(
-          refreshToken,
-        ) as RefreshTokenPayload;
+        const verifiedPayload = this.jwtService.verify(refreshToken);
         return {
           ...verifiedPayload,
           tokenId: token._id.toString(),

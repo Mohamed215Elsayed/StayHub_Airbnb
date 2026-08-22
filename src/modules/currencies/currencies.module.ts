@@ -27,6 +27,6 @@ import { SoftDeleteCurrencyUsecase } from './use-cases/soft-delete-currency.usec
     UpdateCurrencyUsecase,
     SoftDeleteCurrencyUsecase,
   ],
-  exports: [CurrenciesService, CurrencyRepository],
+  exports: [],
 })
 export class CurrenciesModule {}

@@ -61,6 +61,6 @@ import { PinoLogger } from '@common/interceptors';
     { provide: APP_FILTER, useClass: CustomExceptionFilter },
     { provide: APP_INTERCEPTOR, useClass: LoggerInterceptor },
   ],
-  exports: [I18nModule, MongooseModule, CustomI18nService],
+  exports: [I18nModule, CustomI18nService, PinoLogger],
 })
 export class CoreModule {}

@@ -2,8 +2,8 @@ import { Injectable, Logger } from '@nestjs/common';
 import { TokenService } from '../tokens/token.service';
 
 @Injectable()
-export class LogoutUseCase {
-  private readonly logger = new Logger(LogoutUseCase.name);
+export class LogoutUsecase {
+  private readonly logger = new Logger(LogoutUsecase.name);
   constructor(private readonly tokenService: TokenService) {}
 
   async execute(

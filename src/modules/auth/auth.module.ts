@@ -9,15 +9,12 @@ import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { ResponseInterceptor } from './interceptors/auth.interceptor';
 import { EnvironmentVariables } from '@common/configuration/environment.interface';
 import { MongooseModule } from '@nestjs/mongoose';
-import {
-  RefreshToken,
-  RefreshTokenSchema,
-} from './schema/refresh-token.schema';
+import { RefreshTokenSchema } from './schema/refresh-token.schema';
 import { RegisterUsecase } from './use-cases/register.usecase';
 import { GenerateTokensAndSaveUsecase } from './use-cases/generateTokensAndSave.usecase';
 import { LoginUsecase } from './use-cases/login.usecase';
 import { RefreshTokenUsecase } from './use-cases/refresh-token.usecase';
-import { LogoutUseCase } from './use-cases/logout.usecase';
+import { LogoutUsecase } from './use-cases/logout.usecase';
 import { CoreModule } from '../../core.module';
 import { ModelNames } from '@common/data-access';
 import { RefreshTokenRepository } from './repository/refresh-token.repository';
@@ -36,19 +33,12 @@ import { SystemAdminsModule } from '@modules/system-admins/system-admins.module'
     GenerateTokensAndSaveUsecase,
     LoginUsecase,
     RefreshTokenUsecase,
-    LogoutUseCase,
+    LogoutUsecase,
     RefreshTokenRepository,
     LoginAsUserUsecase,
     LoginAsSystemAdminUsecase,
   ],
-  exports: [
-    JwtModule,
-    TokenService,
-    JwtAuthGuard,
-    ResponseInterceptor,
-    RefreshTokenRepository,
-    SystemAdminsModule,
-  ],
+  exports: [JwtModule],
   imports: [
     CoreModule,
     UsersModule,

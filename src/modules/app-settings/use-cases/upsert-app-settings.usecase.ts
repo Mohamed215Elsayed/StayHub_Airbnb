@@ -5,7 +5,7 @@ import { AppSettingsResponseDto } from '../dtos/app-settings-response.dto';
 import { plainToInstance } from 'class-transformer';
 
 @Injectable()
-export class UpsertAppSettingsUseCase {
+export class UpsertAppSettingsUsecase {
   constructor(private readonly appSettingsRepository: AppSettingsRepository) {}
 
   async execute(

@@ -29,6 +29,6 @@ import { SoftDeleteUnitCategoryUsecase } from './use-cases/soft-delete-unit-cate
     FindUnitCategoryByIdUsecase,
     SoftDeleteUnitCategoryUsecase,
   ],
-  exports: [UnitCategoriesService, UnitCategoryRepository],
+  exports: [],
 })
 export class UnitCategoriesModule {}

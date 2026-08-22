@@ -3,18 +3,18 @@ import { RegisterAuthDto } from './dto/register-auth.dto';
 import { AuthResponseDto } from './dto/auth-response.dto';
 import { AuthTokens } from './interfaces/auth.interface';
 import { LoginAuthDto } from './dto/login-auth.dto';
-import { RegisterUseCase } from './use-cases/register.usecase';
-import { LoginUseCase } from './use-cases/login.usecase';
-import { RefreshTokenUseCase } from './use-cases/refresh-token.usecase';
+import { RegisterUsecase } from './use-cases/register.usecase';
+import { LoginUsecase } from './use-cases/login.usecase';
+import { RefreshTokenUsecase } from './use-cases/refresh-token.usecase';
 import { LogoutUseCase } from './use-cases/logout.usecase';
 
 @Injectable()
 export class AuthService {
   private readonly logger = new Logger(AuthService.name);
   constructor(
-    private readonly registerUseCase: RegisterUseCase,
-    private readonly loginUseCase: LoginUseCase,
-    private readonly refreshTokenUseCase: RefreshTokenUseCase,
+    private readonly registerUsecase: RegisterUsecase,
+    private readonly loginUsecase: LoginUsecase,
+    private readonly refreshTokenUsecase: RefreshTokenUsecase,
     private readonly logoutUseCase: LogoutUseCase,
   ) {}
 
@@ -24,7 +24,7 @@ export class AuthService {
     userAgent?: string,
   ): Promise<AuthResponseDto> {
     this.logger.log(`Register attempt for email: ${registerAuthDto.email}`);
-    const result = await this.registerUseCase.execute(
+    const result = await this.registerUsecase.execute(
       registerAuthDto,
       ipAddress,
       userAgent,
@@ -39,7 +39,7 @@ export class AuthService {
     userAgent?: string,
   ): Promise<AuthResponseDto> {
     this.logger.log(`Login attempt for email: ${loginAuthDto.email}`);
-    const result = await this.loginUseCase.execute(
+    const result = await this.loginUsecase.execute(
       loginAuthDto,
       ipAddress,
       userAgent,
@@ -54,7 +54,7 @@ export class AuthService {
     userAgent?: string,
   ): Promise<AuthTokens> {
     this.logger.log('Refresh token attempt');
-    const tokens = await this.refreshTokenUseCase.execute(
+    const tokens = await this.refreshTokenUsecase.execute(
       refreshToken,
       ipAddress,
       userAgent,

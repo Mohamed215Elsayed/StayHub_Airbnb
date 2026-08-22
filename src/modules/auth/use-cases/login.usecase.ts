@@ -1,50 +1,26 @@
 import { Injectable } from '@nestjs/common';
+import { LoginAsUserUsecase } from './login-as-user.usecase';
+import { LoginAsSystemAdminUsecase } from './login-as-system-admin.usecase';
 import { LoginAuthDto } from '../dto/login-auth.dto';
-import { CustomUnauthorizedException } from '@common/error-handling/custom-exceptions/unauthorized.exception';
-import { verify } from '@common/utils/hash.util';
-import { UsersService } from '@modules/users/users.service';
-import { GenerateTokensAndSaveUseCase } from './generateTokensAndSave.usecase';
 import { AuthResponseDto } from '../dto/auth-response.dto';
-import { plainToInstance } from 'class-transformer';
+import { Roles } from '@common/constants';
 
 @Injectable()
-export class LoginUseCase {
+export class LoginUsecase {
   constructor(
-    private readonly usersService: UsersService,
-    private readonly generateTokensAndSaveUseCase: GenerateTokensAndSaveUseCase,
+    private readonly loginAsUserUsecase: LoginAsUserUsecase,
+    private readonly loginAsSystemAdminUsecase: LoginAsSystemAdminUsecase,
   ) {}
   async execute(
-    loginAuthDto: LoginAuthDto,
+    body: LoginAuthDto,
     ipAddress?: string,
     userAgent?: string,
   ): Promise<AuthResponseDto> {
-    const { email, password } = loginAuthDto;
-
-    const user = await this.usersService.findOne(
-      { email },
-      { includePassword: true },
-    );
-
-    if (!user || !(await verify(user.password, password))) {
-      throw new CustomUnauthorizedException('error.INVALID_CREDENTIALS');
+    // login as user
+    if (body.role.includes(Roles.USER)) {
+      return this.loginAsUserUsecase.execute(body, ipAddress, userAgent);
     }
-
-    const tokens = await this.generateTokensAndSaveUseCase.execute(
-      user._id.toString(),
-      user.email,
-      ipAddress,
-      userAgent,
-    );
-    return plainToInstance(AuthResponseDto, {
-      user: {
-        id: user._id.toString(),
-        name: user.name,
-        email: user.email,
-        phoneNumber: user.phoneNumber,
-        createdAt: user.createdAt,
-        updatedAt: user.updatedAt,
-      },
-      ...tokens,
-    });
+    // login as system admin
+    return this.loginAsSystemAdminUsecase.execute(body, ipAddress, userAgent);
   }
 }

@@ -7,7 +7,9 @@ import { plainToInstance } from 'class-transformer';
 
 @Injectable()
 export class CreateUnitCategoryUsecase {
-  constructor(private readonly unitCategoryRepository: UnitCategoryRepository) {}
+  constructor(
+    private readonly unitCategoryRepository: UnitCategoryRepository,
+  ) {}
 
   async execute(body: CreateUnitCategoryDto): Promise<UnitCategoryResponseDto> {
     const existingUnitCategory = await this.unitCategoryRepository.findOne({
@@ -21,8 +23,12 @@ export class CreateUnitCategoryUsecase {
 
     const createdUnitCategory = await this.unitCategoryRepository.create(body);
 
-    return plainToInstance(UnitCategoryResponseDto, createdUnitCategory.toObject(), {
-      excludeExtraneousValues: true,
-    });
+    return plainToInstance(
+      UnitCategoryResponseDto,
+      createdUnitCategory.toObject(),
+      {
+        excludeExtraneousValues: true,
+      },
+    );
   }
 }

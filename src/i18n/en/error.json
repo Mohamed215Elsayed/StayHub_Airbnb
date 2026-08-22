@@ -13,5 +13,11 @@
     "COUNTRY_CODE_ALREADY_REGISTERED": "Country code is already registered",
     "CITY_NOT_FOUND": "City not found",
     "CITY_ALREADY_EXISTS": "City already exists in this country",
-    "INTERNAL_SERVER_ERROR": "Internal server error"
+    "INTERNAL_SERVER_ERROR": "Internal server error",
+    "SYSTEM_ADMIN_NOT_FOUND": "System admin not found",
+    "APP_SETTINGS_NOT_FOUND": "App settings not found",
+    "UNIT_CATEGORY_NOT_FOUND": "Unit category not found",
+    "UNIT_CATEGORY_ALREADY_EXISTS": "Unit category already exists",
+    "CURRENCY_NOT_FOUND": "Currency not found",
+    "CURRENCY_ALREADY_EXISTS": "Currency already exists"
 }

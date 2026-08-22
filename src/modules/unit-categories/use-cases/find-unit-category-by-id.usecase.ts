@@ -6,7 +6,9 @@ import { plainToInstance } from 'class-transformer';
 
 @Injectable()
 export class FindUnitCategoryByIdUsecase {
-  constructor(private readonly unitCategoryRepository: UnitCategoryRepository) {}
+  constructor(
+    private readonly unitCategoryRepository: UnitCategoryRepository,
+  ) {}
 
   async execute(unitCategoryId: string): Promise<UnitCategoryResponseDto> {
     const unitCategory = await this.unitCategoryRepository.findOne({

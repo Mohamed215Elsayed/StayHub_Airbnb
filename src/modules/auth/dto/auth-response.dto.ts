@@ -3,16 +3,8 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Expose } from 'class-transformer';
 
 export class AuthResponseDto {
-  // user!: {
-  //   id: string;
-  //   name: string;
-  //   email: string;
-  //   phoneNumber: string;
-  //   createdAt: Date;
-  //   updatedAt: Date;
-  // };
   @ApiProperty({
-    type: () => UserResponseDto, // nested object
+    type: () => UserResponseDto,
     description: 'Authenticated user data (excluding sensitive fields)',
   })
   @Expose()

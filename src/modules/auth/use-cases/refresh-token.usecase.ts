@@ -2,16 +2,16 @@ import { Injectable } from '@nestjs/common';
 import { TokenService } from '../tokens/token.service';
 import { UsersService } from '@modules/users/users.service';
 import { CustomUnauthorizedException } from '@common/error-handling/custom-exceptions/unauthorized.exception';
-import { GenerateTokensAndSaveUseCase } from './generateTokensAndSave.usecase';
+import { GenerateTokensAndSaveUsecase } from './generateTokensAndSave.usecase';
 import { AuthTokens } from '../interfaces/auth.interface';
 import { Types } from 'mongoose';
 
 @Injectable()
-export class RefreshTokenUseCase {
+export class RefreshTokenUsecase {
   constructor(
     private readonly usersService: UsersService,
     private readonly tokenService: TokenService,
-    private readonly generateTokensAndSaveUseCase: GenerateTokensAndSaveUseCase,
+    private readonly generateTokensAndSaveUsecase: GenerateTokensAndSaveUsecase,
   ) {}
   async execute(
     refreshToken: string,
@@ -44,9 +44,10 @@ export class RefreshTokenUseCase {
 
     await this.tokenService.revokeRefreshToken(matchedToken.tokenId);
 
-    return this.generateTokensAndSaveUseCase.execute(
+    return this.generateTokensAndSaveUsecase.execute(
       user._id.toString(),
       user.email,
+      payload.role,
       ipAddress,
       userAgent,
     );

@@ -1,3 +1,4 @@
+import { Roles } from '@common/constants';
 import { Request } from 'express';
 /**
  * JWT payload embedded in signed tokens.
@@ -9,6 +10,7 @@ export interface JwtPayload {
   sub: string;
   email: string;
   type?: string;
+  role: Roles;
 }
 
 export interface RequestWithUser extends Request {

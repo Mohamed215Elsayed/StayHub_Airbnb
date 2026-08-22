@@ -1,7 +1,14 @@
-import { IsEmail, IsNotEmpty, IsString, MaxLength } from 'class-validator';
+import {
+  IsEmail,
+  IsEnum,
+  IsNotEmpty,
+  IsString,
+  MaxLength,
+} from 'class-validator';
 import { Transform } from 'class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
 import { i18nValidationMessage } from 'nestjs-i18n';
+import { Roles } from '@common/constants';
 
 export class LoginAuthDto {
   @Transform(({ value }) => value?.trim().toLowerCase())
@@ -18,4 +25,14 @@ export class LoginAuthDto {
   @IsNotEmpty({ message: i18nValidationMessage('auth.PASSWORD_REQUIRED') })
   @MaxLength(72, { message: i18nValidationMessage('auth.PASSWORD_TOO_LONG') })
   password!: string;
+
+  @ApiProperty({
+    type: 'string',
+    enum: Roles,
+    description: 'actor role',
+    example: Roles.USER,
+  })
+  @IsNotEmpty()
+  @IsEnum(Roles)
+  role!: Roles;
 }

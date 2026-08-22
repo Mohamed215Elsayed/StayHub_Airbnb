@@ -1,44 +1,48 @@
-import { CreateUserDto } from '@modules/users/dto/create-user.dto';
 import { Injectable, Logger } from '@nestjs/common';
 import { Roles } from '@common/constants';
-import { RegisterAuthDto } from '../dto/register-auth.dto';
-import { AuthResponseDto } from '../dto/auth-response.dto';
+import { LoginAuthDto } from '../dto/login-auth.dto';
+import { CustomUnauthorizedException } from '@common/error-handling/custom-exceptions/unauthorized.exception';
+import { verify } from '@common/utils/hash.util';
 import { UsersService } from '@modules/users/users.service';
 import { GenerateTokensAndSaveUsecase } from './generateTokensAndSave.usecase';
+import { AuthResponseDto } from '../dto/auth-response.dto';
 import { plainToInstance } from 'class-transformer';
 
 @Injectable()
-export class RegisterUsecase {
-  private readonly logger = new Logger(RegisterUsecase.name);
+export class LoginAsUserUsecase {
+  private readonly logger = new Logger(LoginAsUserUsecase.name);
   constructor(
     private readonly usersService: UsersService,
     private readonly generateTokensAndSaveUsecase: GenerateTokensAndSaveUsecase,
   ) {}
-
   async execute(
-    registerAuthDto: RegisterAuthDto,
+    loginAuthDto: LoginAuthDto,
     ipAddress?: string,
     userAgent?: string,
   ): Promise<AuthResponseDto> {
-    const createUserDto = plainToInstance(CreateUserDto, registerAuthDto, {
-      excludeExtraneousValues: true,
-    });
+    const { email, password } = loginAuthDto;
+    const user = await this.usersService.findOne(
+      { email },
+      { includePassword: true },
+    );
 
-    const user = await this.usersService.create(createUserDto);
-    this.logger.log(`User created: ${user.id}`);
+    if (!user || !(await verify(user.password, password))) {
+      throw new CustomUnauthorizedException('error.INVALID_CREDENTIALS');
+    }
+
     const tokens = await this.generateTokensAndSaveUsecase.execute(
-      user.id,
+      user._id.toString(),
       user.email,
       Roles.USER,
       ipAddress,
       userAgent,
     );
-    this.logger.log(`Tokens generated for user: ${user.id}`);
+
     return plainToInstance(
       AuthResponseDto,
       {
         user: {
-          id: user.id,
+          id: user._id.toString(),
           name: user.name,
           email: user.email,
           phoneNumber: user.phoneNumber,

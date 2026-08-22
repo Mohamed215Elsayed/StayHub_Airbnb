@@ -1,6 +1,8 @@
 import { Exclude, Expose, Transform } from 'class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
+import { Roles } from '@common/constants';
 
+@Exclude()
 export class UserResponseDto {
   @ApiProperty({
     example: '507f1f77bcf86cd799439011',
@@ -50,4 +52,12 @@ export class UserResponseDto {
 
   @Exclude()
   __v?: number;
+
+  @ApiProperty({
+    enum: Roles,
+    example: Roles.USER,
+    description: 'User role for authorization',
+  })
+  @Expose()
+  role?: Roles;
 }

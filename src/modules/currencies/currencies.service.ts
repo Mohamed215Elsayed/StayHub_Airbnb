@@ -12,39 +12,38 @@ import { SoftDeleteCurrencyUsecase } from './use-cases/soft-delete-currency.usec
 
 @Injectable()
 export class CurrenciesService {
-    constructor(
-        private readonly createCurrencyUsecase: CreateCurrencyUsecase,
-        private readonly findCurrencyByIdUsecase: FindCurrencyByIdUsecase,
-        private readonly findAllCurrenciesUsecase: FindAllCurrenciesUsecase,
-        private readonly updateCurrencyUsecase: UpdateCurrencyUsecase,
-        private readonly softDeleteCurrencyUsecase: SoftDeleteCurrencyUsecase
-    ) { }
+  constructor(
+    private readonly createCurrencyUsecase: CreateCurrencyUsecase,
+    private readonly findCurrencyByIdUsecase: FindCurrencyByIdUsecase,
+    private readonly findAllCurrenciesUsecase: FindAllCurrenciesUsecase,
+    private readonly updateCurrencyUsecase: UpdateCurrencyUsecase,
+    private readonly softDeleteCurrencyUsecase: SoftDeleteCurrencyUsecase,
+  ) {}
 
-    async createCurrency(
-        createCurrencyDto: CreateCurrencyDto,
-    ): Promise<CurrencyResponseDto> {
-        return this.createCurrencyUsecase.execute(createCurrencyDto);
-    }
+  async createCurrency(
+    createCurrencyDto: CreateCurrencyDto,
+  ): Promise<CurrencyResponseDto> {
+    return this.createCurrencyUsecase.execute(createCurrencyDto);
+  }
 
-    async getCurrencyById(id: string): Promise<CurrencyResponseDto> {
-        return this.findCurrencyByIdUsecase.execute(id);
-    }
+  async getCurrencyById(id: string): Promise<CurrencyResponseDto> {
+    return this.findCurrencyByIdUsecase.execute(id);
+  }
 
-    async findAll(
-        query: FindAllDto,
-    ): Promise<PaginatedResult<CurrencyResponseDto>> {
-        return this.findAllCurrenciesUsecase.execute(query);
-    }
+  async findAll(
+    query: FindAllDto,
+  ): Promise<PaginatedResult<CurrencyResponseDto>> {
+    return this.findAllCurrenciesUsecase.execute(query);
+  }
 
-    async updateById(
-        id: string,
-        body: UpdateCurrencyDto,
-    ): Promise<CurrencyResponseDto> {
-        return this.updateCurrencyUsecase.execute(id, body);
-    }
+  async updateById(
+    id: string,
+    body: UpdateCurrencyDto,
+  ): Promise<CurrencyResponseDto> {
+    return this.updateCurrencyUsecase.execute(id, body);
+  }
 
-    async deleteById(id: string): Promise<CurrencyResponseDto> {
-        return this.softDeleteCurrencyUsecase.execute(id);
-    }
-
+  async deleteById(id: string): Promise<CurrencyResponseDto> {
+    return this.softDeleteCurrencyUsecase.execute(id);
+  }
 }

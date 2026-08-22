@@ -1,26 +1,26 @@
 import { applyDecorators } from '@nestjs/common';
-import { ApiOperation, ApiParam, ApiResponse } from '@nestjs/swagger';
-import { CurrencyResponseDto } from '../dtos/currency-response.dto';
+import { ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { SystemAdminResponseDto } from '../dtos/system-admin-response.dto';
 import { ErrorListResponseDto } from '@common/error-handling/dto/error-response.dto';
 
-export function FindCurrencyByIdSwagger() {
+export function LoginAsSystemAdminSwagger() {
   return applyDecorators(
     ApiOperation({
-      summary: 'Get currency by ID',
-      description: 'Retrieve a single currency by its ID',
+      summary: 'Login as system admin',
     }),
-    ApiParam({ name: 'id', type: String }),
-    ApiResponse({ status: 200, type: CurrencyResponseDto }),
     ApiResponse({
-      status: 404,
-      description: 'Not Found - Currency does not exist',
+      status: 200,
+      type: SystemAdminResponseDto,
+    }),
+    ApiResponse({
+      status: 401,
       type: ErrorListResponseDto,
       content: {
         'application/json': {
           examples: {
-            NotFound: {
-              summary: 'Currency not found',
-              value: { errors: [{ message: 'Currency not found' }] },
+            Unauthorized: {
+              summary: 'Unauthorized',
+              value: { errors: [{ message: 'Invalid credentials' }] },
             },
           },
         },
@@ -28,7 +28,6 @@ export function FindCurrencyByIdSwagger() {
     }),
     ApiResponse({
       status: 500,
-      description: 'Internal server error',
       type: ErrorListResponseDto,
       content: {
         'application/json': {

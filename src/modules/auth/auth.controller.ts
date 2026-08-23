@@ -2,9 +2,7 @@ import {
   Controller,
   Post,
   Body,
-  UseInterceptors,
   Req,
-  UseGuards,
   Res,
   HttpCode,
   HttpStatus,
@@ -17,13 +15,11 @@ import type { Response } from 'express';
 import { AuthService } from './auth.service';
 import { RegisterAuthDto } from './dto/register-auth.dto';
 import { AuthResponseDto } from './dto/auth-response.dto';
-import type { AuthTokens, IPrincipal } from './interfaces/auth.interface';
-import { ResponseInterceptor } from './interceptors/auth.interceptor';
+import type { AuthTokens } from './interfaces/auth.interface';
 import { LoginAuthDto } from './dto/login-auth.dto';
-import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { RefreshTokenDto } from './dto/refresh-token.dto';
 import { parseDurationToMs } from '@common/utils/parse-duration';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { ApiTags } from '@nestjs/swagger';
 import { CustomI18nService } from '@i18n/custom-i18n.service';
 import {
   RegisterSwagger,
@@ -51,7 +47,6 @@ export class AuthController {
   ) {}
 
   @Public()
-  @UseInterceptors(ResponseInterceptor)
   @Post('/register')
   @RegisterSwagger
   async register(
@@ -70,7 +65,6 @@ export class AuthController {
   }
 
   @Public()
-  @UseInterceptors(ResponseInterceptor)
   @Post('/login')
   @LoginSwagger
   @HttpCode(HttpStatus.OK)
@@ -86,7 +80,6 @@ export class AuthController {
   }
 
   @Public()
-  @UseInterceptors(ResponseInterceptor)
   @Post('/refresh')
   @RefreshTokenSwagger
   async refresh(

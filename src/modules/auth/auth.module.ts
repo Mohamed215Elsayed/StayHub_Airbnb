@@ -7,7 +7,6 @@ import { JwtModule, JwtModuleOptions } from '@nestjs/jwt';
 import { TokenService } from './tokens/token.service';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { RolesGuard } from './guards/roles.guard';
-import { ResponseInterceptor } from './interceptors/auth.interceptor';
 import { EnvironmentVariables } from '@common/configuration/environment.interface';
 import { MongooseModule } from '@nestjs/mongoose';
 import { RefreshTokenSchema } from './schema/refresh-token.schema';
@@ -29,7 +28,6 @@ import { SystemAdminsModule } from '@modules/system-admins/system-admins.module'
     AuthService,
     TokenService,
     JwtAuthGuard,
-    ResponseInterceptor,
     RegisterUsecase,
     GenerateTokensAndSaveUsecase,
     LoginUsecase,

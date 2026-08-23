@@ -13,6 +13,17 @@ export interface JwtPayload {
   role: Roles;
 }
 
+export interface CurrentUserData {
+  _id: string;
+  name: string;
+  email: string;
+}
+
+export interface IPrincipal {
+  user: CurrentUserData;
+  role: Roles;
+}
+
 export interface RequestWithUser extends Request {
   user: JwtPayload;
 }

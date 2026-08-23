@@ -11,12 +11,13 @@ import {
   Ip,
   Headers,
   Logger,
+  Get,
 } from '@nestjs/common';
 import type { Response } from 'express';
 import { AuthService } from './auth.service';
 import { RegisterAuthDto } from './dto/register-auth.dto';
 import { AuthResponseDto } from './dto/auth-response.dto';
-import type { AuthTokens, RequestWithUser } from './interfaces/auth.interface';
+import type { AuthTokens, IPrincipal } from './interfaces/auth.interface';
 import { ResponseInterceptor } from './interceptors/auth.interceptor';
 import { LoginAuthDto } from './dto/login-auth.dto';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
@@ -33,6 +34,11 @@ import {
 import { ConfigService } from '@nestjs/config';
 import { EnvironmentVariables } from '@common/configuration/environment.interface';
 import { API_TAGS } from '@common/swagger';
+import { Public } from './decorators/public.decorator';
+import {
+  CurrentAccount,
+  Principal,
+} from './decorators/current-account.decorator';
 
 @ApiTags(API_TAGS.AUTH)
 @Controller('auth')
@@ -44,6 +50,7 @@ export class AuthController {
     private readonly configService: ConfigService<EnvironmentVariables>,
   ) {}
 
+  @Public()
   @UseInterceptors(ResponseInterceptor)
   @Post('/register')
   @RegisterSwagger
@@ -62,6 +69,7 @@ export class AuthController {
     return result;
   }
 
+  @Public()
   @UseInterceptors(ResponseInterceptor)
   @Post('/login')
   @LoginSwagger
@@ -77,6 +85,7 @@ export class AuthController {
     return result;
   }
 
+  @Public()
   @UseInterceptors(ResponseInterceptor)
   @Post('/refresh')
   @RefreshTokenSwagger
@@ -95,13 +104,19 @@ export class AuthController {
     return tokens;
   }
 
-  @UseGuards(JwtAuthGuard)
+  @Get('me')
+  getMe(@CurrentAccount() principal: Principal) {
+    return principal;
+  }
+
   @Post('/logout')
-  @ApiBearerAuth()
   @LogoutSwagger
-  async logout(@Req() req: RequestWithUser): Promise<{ message: string }> {
-    const userId = req.user.sub;
-    const ip = req.ip;
+  async logout(
+    @CurrentAccount() principal: Principal,
+    @Req() req: Request,
+  ): Promise<{ message: string }> {
+    const userId = principal.user._id;
+    const ip = (req as any).ip ?? 'unknown';
     const userAgent = req.headers['user-agent'] ?? 'unknown';
     await this.authService.logout(userId, ip, userAgent);
     return { message: this.customI18nService.translate('auth.LOGOUT_SUCCESS') };

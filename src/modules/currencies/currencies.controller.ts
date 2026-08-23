@@ -24,6 +24,8 @@ import { CurrencyIdDto } from './dtos/currency-id.dto';
 import { FindAllDto } from './dtos/find-all-currencies.dto';
 import { PaginatedResult } from '@common/data-access';
 import { UpdateCurrencyDto } from './dtos/update-currency.dto';
+import { Authorize } from '@modules/auth/decorators/roles.decorator';
+import { Roles } from '@common/constants';
 
 @ApiTags(API_TAGS.CURRENCIES)
 @Controller('currencies')
@@ -32,6 +34,7 @@ export class CurrenciesController {
 
   @CreateCurrencySwagger()
   @Post()
+  @Authorize(Roles.SYSTEM_ADMIN)
   async createCurrency(
     @Body() body: CreateCurrencyDto,
   ): Promise<CurrencyResponseDto> {
@@ -56,6 +59,7 @@ export class CurrenciesController {
 
   @UpdateCurrencySwagger()
   @Patch('/:id')
+  @Authorize(Roles.SYSTEM_ADMIN)
   async update(
     @Param() param: CurrencyIdDto,
     @Body() body: UpdateCurrencyDto,
@@ -65,6 +69,7 @@ export class CurrenciesController {
 
   @DeleteCurrencySwagger()
   @Delete('/:id')
+  @Authorize(Roles.SYSTEM_ADMIN)
   async deleteCurrencyById(
     @Param() param: CurrencyIdDto,
   ): Promise<CurrencyResponseDto> {

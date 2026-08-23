@@ -33,10 +33,9 @@ export class RefreshTokenUsecase {
       throw new CustomUnauthorizedException('error.INVALID_REFRESH_TOKEN');
     }
 
-    const user = await this.usersService.findOne(
-      { _id: new Types.ObjectId(payload.sub) },
-      { includePassword: false },
-    );
+    const user = await this.usersService.findOne({
+      _id: new Types.ObjectId(payload.sub),
+    });
 
     if (!user) {
       throw new CustomUnauthorizedException('error.INVALID_REFRESH_TOKEN');
@@ -45,7 +44,7 @@ export class RefreshTokenUsecase {
     await this.tokenService.revokeRefreshToken(matchedToken.tokenId);
 
     return this.generateTokensAndSaveUsecase.execute(
-      user._id.toString(),
+      user.id,
       user.email,
       payload.role,
       ipAddress,

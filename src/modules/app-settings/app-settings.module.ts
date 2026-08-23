@@ -5,7 +5,7 @@ import { ModelNames } from '@common/data-access';
 import { AppSettingsController } from './app-settings.controller';
 import { AppSettingsService } from './app-settings.service';
 import { AppSettingsRepository } from './repository/app-settings.repository';
-import { UpsertAppSettingsUseCase } from './use-cases/upsert-app-settings.usecase';
+import { UpsertAppSettingsUsecase } from './use-cases/upsert-app-settings.usecase';
 import { FindAllAppSettingsUsecase } from './use-cases/find-all-app-settings.usecase';
 
 @Module({
@@ -18,9 +18,9 @@ import { FindAllAppSettingsUsecase } from './use-cases/find-all-app-settings.use
   providers: [
     AppSettingsService,
     AppSettingsRepository,
-    UpsertAppSettingsUseCase,
+    UpsertAppSettingsUsecase,
     FindAllAppSettingsUsecase,
   ],
-  exports: [AppSettingsService, AppSettingsRepository],
+  exports: [],
 })
 export class AppSettingsModule {}

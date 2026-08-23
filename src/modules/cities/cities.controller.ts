@@ -25,6 +25,8 @@ import { PaginatedResult } from '@common/data-access';
 import { FindAllCitiesSwagger } from './swagger/find-all-cities.swagger';
 import { UpdateCitySwagger } from './swagger/update-city.swagger';
 import { UpdateCityDto } from './dtos/update-city.dto';
+import { Authorize } from '@modules/auth/decorators/roles.decorator';
+import { Roles } from '@common/constants';
 
 @ApiTags(API_TAGS.CITIES)
 @Controller('cities')
@@ -33,6 +35,7 @@ export class CitiesController {
 
   @CreateCitySwagger()
   @Post()
+  @Authorize(Roles.SYSTEM_ADMIN)
   async createCity(@Body() body: CreateCityDto): Promise<CityResponseDto> {
     return this.citiesService.createCity(body);
   }
@@ -47,6 +50,7 @@ export class CitiesController {
 
   @UpdateCitySwagger()
   @Patch('/:id')
+  @Authorize(Roles.SYSTEM_ADMIN)
   async updateCity(
     @Param('id') cityId: string,
     @Body() body: UpdateCityDto,
@@ -62,6 +66,7 @@ export class CitiesController {
 
   @DeleteCitySwagger()
   @Delete('/:id')
+  @Authorize(Roles.SYSTEM_ADMIN)
   async deleteCity(@Param('id') cityId: string): Promise<CityResponseDto> {
     return this.citiesService.deleteCity(cityId);
   }

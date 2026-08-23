@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { plainToInstance } from 'class-transformer';
 import { CustomConflictException } from '@common/error-handling/custom-exceptions/conflict.exception';
 import { CreateUserDto } from '../dto/create-user.dto';
+import { RegisterAuthDto } from '@modules/auth/dto/register-auth.dto';
 import { UserResponseDto } from '../dto/user-response.dto';
 import { hash } from '@common/utils/hash.util';
 import { UserRepository } from '../repository/user.repository';
@@ -9,7 +10,9 @@ import { UserRepository } from '../repository/user.repository';
 @Injectable()
 export class CreateUserUseCase {
   constructor(private readonly userRepository: UserRepository) {}
-  async execute(body: CreateUserDto): Promise<UserResponseDto> {
+  async execute(
+    body: CreateUserDto | RegisterAuthDto,
+  ): Promise<UserResponseDto> {
     const existingUser = await this.userRepository.findOne({
       $or: [{ email: body.email }, { phoneNumber: body.phoneNumber }],
     });
@@ -34,6 +37,7 @@ export class CreateUserUseCase {
         email: body.email,
         phoneNumber: body.phoneNumber,
         password: passwordHash,
+        isDeleted: false,
       });
       return plainToInstance(UserResponseDto, user.toObject(), {
         excludeExtraneousValues: true,

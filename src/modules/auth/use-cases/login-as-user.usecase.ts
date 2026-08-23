@@ -4,6 +4,7 @@ import { LoginAuthDto } from '../dto/login-auth.dto';
 import { CustomUnauthorizedException } from '@common/error-handling/custom-exceptions/unauthorized.exception';
 import { verify } from '@common/utils/hash.util';
 import { UsersService } from '@modules/users/users.service';
+import { UserRepository } from '@modules/users/repository/user.repository';
 import { GenerateTokensAndSaveUsecase } from './generateTokensAndSave.usecase';
 import { AuthResponseDto } from '../dto/auth-response.dto';
 import { plainToInstance } from 'class-transformer';
@@ -13,6 +14,7 @@ export class LoginAsUserUsecase {
   private readonly logger = new Logger(LoginAsUserUsecase.name);
   constructor(
     private readonly usersService: UsersService,
+    private readonly userRepository: UserRepository,
     private readonly generateTokensAndSaveUsecase: GenerateTokensAndSaveUsecase,
   ) {}
   async execute(
@@ -21,9 +23,10 @@ export class LoginAsUserUsecase {
     userAgent?: string,
   ): Promise<AuthResponseDto> {
     const { email, password } = loginAuthDto;
-    const user = await this.usersService.findOne(
-      { email },
-      { includePassword: true },
+    const user = await this.userRepository.findOne(
+      { email, isDeleted: false },
+      { lean: false },
+      undefined,
     );
 
     if (!user || !(await verify(user.password, password))) {

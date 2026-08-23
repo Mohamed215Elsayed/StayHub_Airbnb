@@ -6,7 +6,7 @@ import { LoginAuthDto } from './dto/login-auth.dto';
 import { RegisterUsecase } from './use-cases/register.usecase';
 import { LoginUsecase } from './use-cases/login.usecase';
 import { RefreshTokenUsecase } from './use-cases/refresh-token.usecase';
-import { LogoutUseCase } from './use-cases/logout.usecase';
+import { LogoutUsecase } from './use-cases/logout.usecase';
 
 @Injectable()
 export class AuthService {
@@ -15,7 +15,7 @@ export class AuthService {
     private readonly registerUsecase: RegisterUsecase,
     private readonly loginUsecase: LoginUsecase,
     private readonly refreshTokenUsecase: RefreshTokenUsecase,
-    private readonly logoutUseCase: LogoutUseCase,
+    private readonly logoutUsecase: LogoutUsecase,
   ) {}
 
   async register(
@@ -69,7 +69,7 @@ export class AuthService {
     userAgent?: string,
   ): Promise<void> {
     this.logger.log(`Logout attempt for user: ${userId}`);
-    await this.logoutUseCase.execute(userId, ipAddress, userAgent);
+    await this.logoutUsecase.execute(userId, ipAddress, userAgent);
     this.logger.log(`User logged out successfully: ${userId}`);
   }
 }

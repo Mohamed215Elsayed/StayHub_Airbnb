@@ -5,6 +5,8 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UserResponseDto } from './dto/user-response.dto';
 import { CreateUserSwagger } from './swagger/create-user.swagger';
 import { API_TAGS } from '@common/swagger';
+import { Authorize } from '@modules/auth/decorators/roles.decorator';
+import { Roles } from '@common/constants';
 
 @ApiTags(API_TAGS.USERS)
 @Controller('users')
@@ -13,6 +15,7 @@ export class UsersController {
 
   @Post()
   @CreateUserSwagger
+  @Authorize(Roles.SYSTEM_ADMIN)
   create(@Body() createUserDto: CreateUserDto): Promise<UserResponseDto> {
     return this.usersService.create(createUserDto);
   }

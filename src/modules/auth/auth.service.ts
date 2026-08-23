@@ -7,6 +7,9 @@ import { RegisterUsecase } from './use-cases/register.usecase';
 import { LoginUsecase } from './use-cases/login.usecase';
 import { RefreshTokenUsecase } from './use-cases/refresh-token.usecase';
 import { LogoutUsecase } from './use-cases/logout.usecase';
+import { UsersService } from '@modules/users/users.service';
+import { SystemAdminsService } from '@modules/system-admins/system-admins.service';
+import { Roles } from '@common/constants';
 
 @Injectable()
 export class AuthService {
@@ -16,6 +19,8 @@ export class AuthService {
     private readonly loginUsecase: LoginUsecase,
     private readonly refreshTokenUsecase: RefreshTokenUsecase,
     private readonly logoutUsecase: LogoutUsecase,
+    private readonly usersService: UsersService,
+    private readonly systemAdminsService: SystemAdminsService,
   ) {}
 
   async register(
@@ -71,5 +76,13 @@ export class AuthService {
     this.logger.log(`Logout attempt for user: ${userId}`);
     await this.logoutUsecase.execute(userId, ipAddress, userAgent);
     this.logger.log(`User logged out successfully: ${userId}`);
+  }
+
+  async getUserById(userId: string) {
+    return this.usersService.findOne({ _id: userId });
+  }
+
+  async getAdminById(adminId: string) {
+    return this.systemAdminsService.findOne({ _id: adminId });
   }
 }

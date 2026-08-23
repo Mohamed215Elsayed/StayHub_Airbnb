@@ -17,7 +17,7 @@ import type { Response } from 'express';
 import { AuthService } from './auth.service';
 import { RegisterAuthDto } from './dto/register-auth.dto';
 import { AuthResponseDto } from './dto/auth-response.dto';
-import type { AuthTokens, RequestWithUser } from './interfaces/auth.interface';
+import type { AuthTokens, IPrincipal } from './interfaces/auth.interface';
 import { ResponseInterceptor } from './interceptors/auth.interceptor';
 import { LoginAuthDto } from './dto/login-auth.dto';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
@@ -35,6 +35,7 @@ import { ConfigService } from '@nestjs/config';
 import { EnvironmentVariables } from '@common/configuration/environment.interface';
 import { API_TAGS } from '@common/swagger';
 import { Public } from './decorators/public.decorator';
+import { CurrentAccount, Principal } from './decorators/current-account.decorator';
 
 @ApiTags(API_TAGS.AUTH)
 @Controller('auth')
@@ -100,18 +101,18 @@ export class AuthController {
     return tokens;
   }
 
-  @UseGuards(JwtAuthGuard)
   @Get('me')
-  getMe(@Req() req: RequestWithUser) {
-    return req.user;
+  getMe(@CurrentAccount() principal: Principal) {
+    return principal;
   }
 
-  @UseGuards(JwtAuthGuard)
   @Post('/logout')
-  @ApiBearerAuth()
   @LogoutSwagger
-  async logout(@Req() req: RequestWithUser): Promise<{ message: string }> {
-    const userId = req.user.sub;
+  async logout(
+    @CurrentAccount() principal: Principal,
+    @Req() req: Request,
+  ): Promise<{ message: string }> {
+    const userId = principal.user._id;
     const ip = (req as any).ip ?? 'unknown';
     const userAgent = req.headers['user-agent'] ?? 'unknown';
     await this.authService.logout(userId, ip, userAgent);

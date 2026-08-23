@@ -16,7 +16,7 @@ import { SystemAdminResponseDto } from '@modules/system-admins/dtos/system-admin
 import { Reflector } from '@nestjs/core';
 import { IS_PUBLIC_KEY } from '../decorators/public.decorator';
 /**************/
-type requestWithUser = Request & {
+export type requestWithUser = Request & {
   principal: IPrincipal;
 };
 /**************/

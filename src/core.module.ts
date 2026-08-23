@@ -39,7 +39,7 @@ import { PinoLogger } from '@common/interceptors';
         loader: I18nJsonLoader,
         loaderOptions: {
           path: join(__dirname, '/i18n/'),
-          watch: true,
+          watch: false,
         },
       }),
       resolvers: [

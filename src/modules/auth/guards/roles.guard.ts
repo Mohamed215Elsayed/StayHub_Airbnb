@@ -3,7 +3,6 @@ import {
     CanActivate,
     ExecutionContext,
 } from '@nestjs/common';
-import { Request } from 'express';
 import { IPrincipal } from '../interfaces/auth.interface';
 import { Reflector } from '@nestjs/core';
 import { IS_PUBLIC_KEY } from '../decorators/public.decorator';
@@ -12,13 +11,13 @@ import { Roles } from '@common/constants';
 import { ROLES_KEY } from '../decorators/roles.decorator';
 import { requestWithUser } from './jwt-auth.guard';
 import { CustomForbiddenException } from '@common/error-handling/custom-exceptions/forbidden.exception';
-import { CustomI18nService } from '@i18n/custom-i18n.service';
+import { I18nService } from 'nestjs-i18n';
 
 @Injectable()
 export class RolesGuard implements CanActivate {
     constructor(
         private readonly reflector: Reflector,
-        private readonly customI18nService: CustomI18nService,
+        private readonly i18nService: I18nService,
     ) { }
     async canActivate(context: ExecutionContext): Promise<boolean> {
         const isPublic = this.reflector.getAllAndOverride<boolean>(IS_PUBLIC_KEY, [
@@ -42,7 +41,7 @@ export class RolesGuard implements CanActivate {
 
         if (!canAccess)
             throw new CustomForbiddenException(
-                this.customI18nService.translate('error.FORBIDDEN'),
+                this.i18nService.translate('error.FORBIDDEN'),
             );
         return true;
     }

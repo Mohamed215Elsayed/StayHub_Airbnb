@@ -1,8 +1,4 @@
-import {
-    Injectable,
-    CanActivate,
-    ExecutionContext,
-} from '@nestjs/common';
+import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
 import { IPrincipal } from '../interfaces/auth.interface';
 import { Reflector } from '@nestjs/core';
 import { IS_PUBLIC_KEY } from '../decorators/public.decorator';
@@ -15,34 +11,34 @@ import { I18nService } from 'nestjs-i18n';
 
 @Injectable()
 export class RolesGuard implements CanActivate {
-    constructor(
-        private readonly reflector: Reflector,
-        private readonly i18nService: I18nService,
-    ) { }
-    async canActivate(context: ExecutionContext): Promise<boolean> {
-        const isPublic = this.reflector.getAllAndOverride<boolean>(IS_PUBLIC_KEY, [
-            context.getHandler(),
-            context.getClass(),
-        ]);
-        if (isPublic) return true;
+  constructor(
+    private readonly reflector: Reflector,
+    private readonly i18nService: I18nService,
+  ) {}
+  async canActivate(context: ExecutionContext): Promise<boolean> {
+    const isPublic = this.reflector.getAllAndOverride<boolean>(IS_PUBLIC_KEY, [
+      context.getHandler(),
+      context.getClass(),
+    ]);
+    if (isPublic) return true;
 
-        const roles = this.reflector.getAllAndOverride<Roles[]>(ROLES_KEY, [
-            context.getHandler(),
-            context.getClass(),
-        ]);
+    const roles = this.reflector.getAllAndOverride<Roles[]>(ROLES_KEY, [
+      context.getHandler(),
+      context.getClass(),
+    ]);
 
-        if (!roles) return true;
+    if (!roles) return true;
 
-        const request = context.switchToHttp().getRequest<requestWithUser>();
-        const principal = request.principal;
-        const userRole = principal.role;
+    const request = context.switchToHttp().getRequest<requestWithUser>();
+    const principal = request.principal;
+    const userRole = principal.role;
 
-        const canAccess = roles.includes(userRole);
+    const canAccess = roles.includes(userRole);
 
-        if (!canAccess)
-            throw new CustomForbiddenException(
-                this.i18nService.translate('error.FORBIDDEN'),
-            );
-        return true;
-    }
+    if (!canAccess)
+      throw new CustomForbiddenException(
+        this.i18nService.translate('error.FORBIDDEN'),
+      );
+    return true;
+  }
 }

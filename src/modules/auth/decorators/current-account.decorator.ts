@@ -15,5 +15,5 @@ export class Principal implements IPrincipal {
   constructor(
     public user: CurrentUserData,
     public role: Roles,
-  ) { }
+  ) {}
 }

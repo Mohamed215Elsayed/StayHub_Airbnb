@@ -23,6 +23,8 @@ import { PaginatedResult } from '@common/data-access';
 import { FindAllUnitCategoriesSwagger } from './swagger/find-all-unit-categories.swagger';
 import { UpdateUnitCategorySwagger } from './swagger/update-unit-category.swagger';
 import { UpdateUnitCategoryDto } from './dtos/update-unit-category.dto';
+import { Authorize } from '@modules/auth/decorators/roles.decorator';
+import { Roles } from '@common/constants';
 
 @ApiTags(API_TAGS.UNIT_CATEGORIES)
 @Controller('unit-categories')
@@ -31,6 +33,7 @@ export class UnitCategoriesController {
 
   @CreateUnitCategorySwagger()
   @Post()
+  @Authorize(Roles.SYSTEM_ADMIN)
   async createUnitCategory(
     @Body() body: CreateUnitCategoryDto,
   ): Promise<UnitCategoryResponseDto> {
@@ -47,6 +50,7 @@ export class UnitCategoriesController {
 
   @UpdateUnitCategorySwagger()
   @Patch('/:id')
+  @Authorize(Roles.SYSTEM_ADMIN)
   async updateUnitCategory(
     @Param('id') unitCategoryId: string,
     @Body() body: UpdateUnitCategoryDto,
@@ -64,6 +68,7 @@ export class UnitCategoriesController {
 
   @DeleteUnitCategorySwagger()
   @Delete('/:id')
+  @Authorize(Roles.SYSTEM_ADMIN)
   async deleteUnitCategoryById(
     @Param('id') unitCategoryId: string,
   ): Promise<UnitCategoryResponseDto> {

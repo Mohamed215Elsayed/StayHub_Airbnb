@@ -6,6 +6,8 @@ import { UpsertAppSettingsDto } from './dtos/upsert-app-settings.dto';
 import { AppSettingsResponseDto } from './dtos/app-settings-response.dto';
 import { UpsertAppSettingsSwagger } from './swagger';
 import { FindAllAppSettingsSwagger } from './swagger/find-all-app-settings.swagger';
+import { Authorize } from '@modules/auth/decorators/roles.decorator';
+import { Roles } from '@common/constants';
 
 @ApiTags(API_TAGS.APP_SETTINGS)
 @Controller('app-settings')
@@ -14,6 +16,7 @@ export class AppSettingsController {
 
   @UpsertAppSettingsSwagger()
   @Put(':id')
+  @Authorize(Roles.SYSTEM_ADMIN)
   async upsertAppSettings(
     @Param('id') id: string,
     @Body() body: UpsertAppSettingsDto,

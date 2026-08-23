@@ -27,6 +27,8 @@ import { CountryIdDto } from './dtos/country-id.dto';
 import { FindAllDto } from './dtos/find-all.dto';
 import { UpdateCountryDto } from './dtos/update-country.dto';
 import { PaginatedResult } from '@common/data-access';
+import { Authorize } from '@modules/auth/decorators/roles.decorator';
+import { Roles } from '@common/constants';
 
 @ApiTags(API_TAGS.COUNTRIES)
 @Controller('countries')
@@ -38,6 +40,7 @@ export class CountriesController {
   @Post()
   @HttpCode(HttpStatus.CREATED)
   @CreateCountrySwagger()
+  @Authorize(Roles.SYSTEM_ADMIN)
   async create(
     @Body() createCountryDto: CreateCountryDto,
   ): Promise<CountryResponseDto> {
@@ -67,6 +70,7 @@ export class CountriesController {
 
   @DeleteCountrySwagger()
   @Delete('/:id')
+  @Authorize(Roles.SYSTEM_ADMIN)
   async delete(@Param() param: CountryIdDto): Promise<CountryResponseDto> {
     this.logger.log(`Soft deleting country with id: ${param.id}`);
     return this.countriesService.delete(param.id);
@@ -74,6 +78,7 @@ export class CountriesController {
 
   @UpdateCountrySwagger()
   @Patch('/:id')
+  @Authorize(Roles.SYSTEM_ADMIN)
   async update(
     @Param() param: CountryIdDto,
     @Body() body: UpdateCountryDto,

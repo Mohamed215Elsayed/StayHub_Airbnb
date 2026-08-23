@@ -29,7 +29,7 @@ export class JwtAuthGuard implements CanActivate {
     private readonly usersService: UsersService,
     private readonly adminsService: SystemAdminsService,
     private readonly reflector: Reflector,
-  ) { }
+  ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const isPublic = this.reflector.getAllAndOverride<boolean>(IS_PUBLIC_KEY, [
@@ -65,7 +65,7 @@ export class JwtAuthGuard implements CanActivate {
     const authHeader = request.headers.authorization;
     if (!authHeader) return null;
     const [bearer, token] = authHeader.split(' ');
-    return (bearer === 'Bearer' && token) ? token : null;
+    return bearer === 'Bearer' && token ? token : null;
   }
   // ################################
   private async buildCurrentUser(payload: JwtPayload): Promise<IPrincipal> {

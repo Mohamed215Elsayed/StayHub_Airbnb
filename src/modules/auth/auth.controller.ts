@@ -35,7 +35,10 @@ import { ConfigService } from '@nestjs/config';
 import { EnvironmentVariables } from '@common/configuration/environment.interface';
 import { API_TAGS } from '@common/swagger';
 import { Public } from './decorators/public.decorator';
-import { CurrentAccount, Principal } from './decorators/current-account.decorator';
+import {
+  CurrentAccount,
+  Principal,
+} from './decorators/current-account.decorator';
 
 @ApiTags(API_TAGS.AUTH)
 @Controller('auth')
@@ -45,7 +48,7 @@ export class AuthController {
     private readonly authService: AuthService,
     private readonly customI18nService: CustomI18nService,
     private readonly configService: ConfigService<EnvironmentVariables>,
-  ) { }
+  ) {}
 
   @Public()
   @UseInterceptors(ResponseInterceptor)

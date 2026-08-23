@@ -11,6 +11,7 @@ import {
   Ip,
   Headers,
   Logger,
+  Get,
 } from '@nestjs/common';
 import type { Response } from 'express';
 import { AuthService } from './auth.service';
@@ -99,7 +100,12 @@ export class AuthController {
     return tokens;
   }
 
-   
+  @UseGuards(JwtAuthGuard)
+  @Get('me')
+  getMe(@Req() req: RequestWithUser) {
+    return req.user;
+  }
+
   @UseGuards(JwtAuthGuard)
   @Post('/logout')
   @ApiBearerAuth()

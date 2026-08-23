@@ -25,7 +25,7 @@ export class LoginAsUserUsecase {
     const { email, password } = loginAuthDto;
     const user = await this.userRepository.findOne(
       { email, isDeleted: false },
-      undefined,
+      { lean: false },
       undefined,
     );
 

@@ -37,6 +37,7 @@ export class CreateUserUseCase {
         email: body.email,
         phoneNumber: body.phoneNumber,
         password: passwordHash,
+        isDeleted: false,
       });
       return plainToInstance(UserResponseDto, user.toObject(), {
         excludeExtraneousValues: true,

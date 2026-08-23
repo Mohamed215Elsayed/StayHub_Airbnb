@@ -25,7 +25,7 @@ export class LoginAsSystemAdminUsecase {
     const { email, password } = loginAuthDto;
     const admin = await this.systemAdminRepository.findOne(
       { email, isDeleted: false },
-      undefined,
+      { lean: false },
       undefined,
     );
 

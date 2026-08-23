@@ -24,6 +24,12 @@ export class User {
 
   @Prop({ required: true })
   password!: string;
+
+  @Prop({ default: false })
+  isDeleted!: boolean;
+
+  @Prop()
+  deletedAt!: Date;
 }
 
 export type UserDocument = User & Document;

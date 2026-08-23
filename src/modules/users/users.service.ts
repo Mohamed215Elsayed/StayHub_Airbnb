@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
+import { RegisterAuthDto } from '@modules/auth/dto/register-auth.dto';
 import { UserResponseDto } from './dto/user-response.dto';
 import { CustomNotFoundException } from '@common/error-handling/custom-exceptions/not-found.exception';
 import { CreateUserUseCase } from './use-cases/create-user.usecase';
@@ -29,7 +30,9 @@ export class UsersService {
    * @returns The created user serialized as {@link UserResponseDto}.
    * @throws CustomConflictException if email or phone already exists.
    */
-  async create(createUserDto: CreateUserDto): Promise<UserResponseDto> {
+  async create(
+    createUserDto: CreateUserDto | RegisterAuthDto,
+  ): Promise<UserResponseDto> {
     return this.createUserUseCase.execute(createUserDto);
   }
 

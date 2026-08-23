@@ -1,4 +1,3 @@
-import { CreateUserDto } from '@modules/users/dto/create-user.dto';
 import { Injectable, Logger } from '@nestjs/common';
 import { Roles } from '@common/constants';
 import { RegisterAuthDto } from '../dto/register-auth.dto';
@@ -20,11 +19,7 @@ export class RegisterUsecase {
     ipAddress?: string,
     userAgent?: string,
   ): Promise<AuthResponseDto> {
-    const createUserDto = plainToInstance(CreateUserDto, registerAuthDto, {
-      excludeExtraneousValues: true,
-    });
-
-    const user = await this.usersService.create(createUserDto);
+    const user = await this.usersService.create(registerAuthDto);
     this.logger.log(`User created: ${user.id}`);
     const tokens = await this.generateTokensAndSaveUsecase.execute(
       user.id,

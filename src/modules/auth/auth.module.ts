@@ -6,6 +6,7 @@ import { UsersModule } from '@modules/users/users.module';
 import { JwtModule, JwtModuleOptions } from '@nestjs/jwt';
 import { TokenService } from './tokens/token.service';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
+import { RolesGuard } from './guards/roles.guard';
 import { ResponseInterceptor } from './interceptors/auth.interceptor';
 import { EnvironmentVariables } from '@common/configuration/environment.interface';
 import { MongooseModule } from '@nestjs/mongoose';
@@ -37,6 +38,7 @@ import { SystemAdminsModule } from '@modules/system-admins/system-admins.module'
     RefreshTokenRepository,
     LoginAsUserUsecase,
     LoginAsSystemAdminUsecase,
+    RolesGuard,
   ],
   exports: [JwtModule],
   imports: [

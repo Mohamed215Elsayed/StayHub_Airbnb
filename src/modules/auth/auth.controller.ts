@@ -35,9 +35,6 @@ import { ConfigService } from '@nestjs/config';
 import { EnvironmentVariables } from '@common/configuration/environment.interface';
 import { API_TAGS } from '@common/swagger';
 import { Public } from './decorators/public.decorator';
-import { CurrentUser } from './decorators/current-user.decorator';
-import type { JwtPayload } from './interfaces/auth.interface';
-import { Roles } from '@common/constants';
 
 @ApiTags(API_TAGS.AUTH)
 @Controller('auth')
@@ -105,19 +102,16 @@ export class AuthController {
 
   @UseGuards(JwtAuthGuard)
   @Get('me')
-  async getMe(@CurrentUser() user: JwtPayload): Promise<any> {
-    if (user.role === Roles.USER) {
-      return this.authService.getUserById(user.sub);
-    }
-    return this.authService.getAdminById(user.sub);
+  getMe(@Req() req: RequestWithUser) {
+    return req.user;
   }
 
   @UseGuards(JwtAuthGuard)
   @Post('/logout')
   @ApiBearerAuth()
   @LogoutSwagger
-  async logout(@CurrentUser() user: JwtPayload, @Req() req: Request): Promise<{ message: string }> {
-    const userId = user.sub;
+  async logout(@Req() req: RequestWithUser): Promise<{ message: string }> {
+    const userId = req.user.sub;
     const ip = (req as any).ip ?? 'unknown';
     const userAgent = req.headers['user-agent'] ?? 'unknown';
     await this.authService.logout(userId, ip, userAgent);

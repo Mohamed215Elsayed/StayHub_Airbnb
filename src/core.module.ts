@@ -18,7 +18,10 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { CustomI18nService } from './i18n/custom-i18n.service';
 import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
 import { CustomExceptionFilter } from '@common/error-handling/filters/custom-exception.filter';
-import { LoggerInterceptor } from '@common/interceptors';
+import {
+  TransformResponseInterceptor,
+  LoggerInterceptor,
+} from '@common/interceptors';
 import { PinoLogger } from '@common/interceptors';
 
 @Module({
@@ -60,6 +63,7 @@ import { PinoLogger } from '@common/interceptors';
     PinoLogger,
     { provide: APP_FILTER, useClass: CustomExceptionFilter },
     { provide: APP_INTERCEPTOR, useClass: LoggerInterceptor },
+    { provide: APP_INTERCEPTOR, useClass: TransformResponseInterceptor },
   ],
   exports: [I18nModule, CustomI18nService, PinoLogger],
 })

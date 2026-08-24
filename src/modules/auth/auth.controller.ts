@@ -15,6 +15,7 @@ import type { Response } from 'express';
 import { AuthService } from './auth.service';
 import { RegisterAuthDto } from './dto/register-auth.dto';
 import { AuthResponseDto } from './dto/auth-response.dto';
+import { MeResponseDto } from './dto/me-response.dto';
 import type { AuthTokens } from './interfaces/auth.interface';
 import { LoginAuthDto } from './dto/login-auth.dto';
 import { RefreshTokenDto } from './dto/refresh-token.dto';
@@ -26,6 +27,7 @@ import {
   LoginSwagger,
   RefreshTokenSwagger,
   LogoutSwagger,
+  MeSwagger,
 } from './swagger';
 import { ConfigService } from '@nestjs/config';
 import { EnvironmentVariables } from '@common/configuration/environment.interface';
@@ -98,7 +100,8 @@ export class AuthController {
   }
 
   @Get('me')
-  getMe(@CurrentAccount() principal: Principal) {
+  @MeSwagger
+  getMe(@CurrentAccount() principal: Principal): MeResponseDto {
     return principal;
   }
 

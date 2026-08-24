@@ -14,6 +14,12 @@ export function FindAllCitiesSwagger() {
     ApiQuery({ name: 'limit', required: false, type: Number }),
     ApiQuery({ name: 'name', required: false, type: String }),
     ApiQuery({ name: 'country', required: false, type: String }),
+    ApiQuery({
+      name: 'ignoreLimit',
+      required: false,
+      type: Boolean,
+      description: 'When true, ignores the limit and returns all results.',
+    }),
     ApiResponse({ status: 200, type: [CityResponseDto] }),
     ApiResponse({
       status: 400,

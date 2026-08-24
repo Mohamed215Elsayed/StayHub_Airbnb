@@ -1,18 +1,58 @@
 import { applyDecorators } from '@nestjs/common';
-import { ApiBody, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiForbiddenResponse,
+  ApiOperation,
+  ApiUnauthorizedResponse,
+  ApiResponse,
+} from '@nestjs/swagger';
 import { CreateCurrencyDto } from '../dtos/create-currency.dto';
 import { CurrencyResponseDto } from '../dtos/currency-response.dto';
 import { ErrorListResponseDto } from '@common/error-handling/dto/error-response.dto';
 
 export function CreateCurrencySwagger() {
   return applyDecorators(
+    ApiBearerAuth(),
     ApiOperation({
       summary: 'Create a currency',
-      description: 'Create a new currency',
+      description: 'Create a new currency. Requires SYSTEM_ADMIN role.',
     }),
     ApiResponse({
       status: 201,
       type: CurrencyResponseDto,
+    }),
+    ApiUnauthorizedResponse({
+      description: 'Unauthorized - Missing or invalid token',
+      type: ErrorListResponseDto,
+      content: {
+        'application/json': {
+          examples: {
+            NoToken: {
+              summary: 'Authorization header missing',
+              value: { errors: [{ message: 'No token provided' }] },
+            },
+            InvalidToken: {
+              summary: 'Token malformed or expired',
+              value: { errors: [{ message: 'Invalid or expired token' }] },
+            },
+          },
+        },
+      },
+    }),
+    ApiForbiddenResponse({
+      description: 'Forbidden - Insufficient role (requires SYSTEM_ADMIN)',
+      type: ErrorListResponseDto,
+      content: {
+        'application/json': {
+          examples: {
+            Forbidden: {
+              summary: 'User does not have SYSTEM_ADMIN role',
+              value: { errors: [{ message: 'Forbidden' }] },
+            },
+          },
+        },
+      },
     }),
     ApiResponse({
       status: 400,

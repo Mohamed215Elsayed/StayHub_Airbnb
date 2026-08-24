@@ -9,43 +9,73 @@ import { API_TAGS } from './constant';
 export class SwaggerConfig {
   static setup(app: INestApplication): void {
     const config = new DocumentBuilder()
-      .setTitle('Airbnb Clone API')
-      .setDescription('This is the apis for airbnb clone')
+      .setTitle('StayHub Airbnb Clone API')
+      .setDescription(
+        'RESTful API for the StayHub Airbnb Clone application.\n\n' +
+          '**Authentication**\n' +
+          'Most endpoints require a Bearer JWT access token. Include it in the `Authorization` ' +
+          'header as `Bearer <accessToken>`. Public endpoints are marked accordingly.\n\n' +
+          '**Rate Limiting**\n' +
+          'API usage may be rate-limited. Please respect throttling limits.\n\n' +
+          '**Internationalization**\n' +
+          'Error messages can be localized via the `x-lang` header or `lang` query parameter.',
+      )
       .setVersion('1.0')
-      .addTag(API_TAGS.AUTH)
-      .addTag(API_TAGS.USERS)
-      .addTag(API_TAGS.COUNTRIES)
-      .addTag(API_TAGS.CITIES)
-      .addTag(API_TAGS.CURRENCIES)
-      .addTag(API_TAGS.UNIT_CATEGORIES)
-      .addTag(API_TAGS.APP_SETTINGS)
-      .addTag(API_TAGS.SYSTEM_ADMINS)
-      .addBearerAuth()
+      .setContact('StayHub Team', 'https://stayhub.dev', 'contact@stayhub.dev')
+      .setLicense('MIT', 'https://opensource.org/licenses/MIT')
+      .addServer('/api')
+      .addTag(
+        API_TAGS.AUTH,
+        'Authentication: register, login, refresh, logout, me',
+      )
+      .addTag(API_TAGS.USERS, 'User management (admin only)')
+      .addTag(API_TAGS.COUNTRIES, 'Country operations')
+      .addTag(
+        API_TAGS.CITIES,
+        'City operations (admin only for write operations)',
+      )
+      .addTag(
+        API_TAGS.CURRENCIES,
+        'Currency operations (admin only for write operations)',
+      )
+      .addTag(
+        API_TAGS.UNIT_CATEGORIES,
+        'Unit category operations (admin only for write operations)',
+      )
+      .addTag(API_TAGS.APP_SETTINGS, 'Application settings (admin only)')
+      .addTag(API_TAGS.SYSTEM_ADMINS, 'System administrator operations')
+      .addBearerAuth(
+        {
+          type: 'http',
+          scheme: 'bearer',
+          bearerFormat: 'JWT',
+          name: 'Authorization',
+          in: 'header',
+          description:
+            'Enter the JWT access token. You can obtain one via POST /api/auth/login or POST /api/auth/register.',
+        },
+        'bearer',
+      )
       .build();
 
     const options: SwaggerDocumentOptions = {
       ignoreGlobalPrefix: false,
       operationIdFactory: (controllerKey: string, methodKey: string) =>
         methodKey,
-      // deepScanRoutes: true, // لو عندك Modules جوه Modules
     };
     const documentFactory = () =>
       SwaggerModule.createDocument(app, config, options);
     SwaggerModule.setup('docs', app, documentFactory, {
-      useGlobalPrefix: true, // هضيف /api تلقائياً قدام docs
-      jsonDocumentUrl: 'swagger.json', // هيبقى تحت /api/swagger.json
+      useGlobalPrefix: true,
+      jsonDocumentUrl: 'swagger.json',
       swaggerOptions: {
         filter: true,
-        displayRequestDuration: true, // إظهار وقت استجابة الـ API بعد التجربة,
-        // persistAuthorization: true, // (اختياري) يحتفظ بالـ Token بعد تحديث الصفحة
-        // docExpansion: 'none', // (اختياري) يطوي كل الـ Endpoints في البداية عشان المنظر يكون نضيف
-        // tryItOutEnabled: true, // (اختياري) يفعّل زر التجربة مباشرة
+        displayRequestDuration: true,
+        persistAuthorization: true,
+        docExpansion: 'none',
+        tryItOutEnabled: true,
       },
-      //   customCss: `
-      //   .topbar-wrapper img { content: url('https://your-logo-url.com/logo.png'); }
-      //   .topbar-wrapper .link { display: flex; align-items: center; }
-      // `,
-      //   customSiteTitle: 'Airbnb Clone API - StayHub',
+      customSiteTitle: 'StayHub Airbnb Clone API',
     });
   }
 }

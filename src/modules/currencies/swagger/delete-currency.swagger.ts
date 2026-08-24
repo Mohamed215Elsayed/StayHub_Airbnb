@@ -1,13 +1,22 @@
 import { applyDecorators } from '@nestjs/common';
-import { ApiOperation, ApiParam, ApiResponse } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiForbiddenResponse,
+  ApiOperation,
+  ApiParam,
+  ApiUnauthorizedResponse,
+  ApiResponse,
+} from '@nestjs/swagger';
 import { CurrencyResponseDto } from '../dtos/currency-response.dto';
 import { ErrorListResponseDto } from '@common/error-handling/dto/error-response.dto';
 
 export function DeleteCurrencySwagger() {
   return applyDecorators(
+    ApiBearerAuth(),
     ApiOperation({
       summary: 'Delete currency by ID',
-      description: 'Delete an existing currency by its MongoDB ID',
+      description:
+        'Delete an existing currency by its MongoDB ID. Requires SYSTEM_ADMIN role.',
     }),
     ApiParam({
       name: 'id',
@@ -19,6 +28,38 @@ export function DeleteCurrencySwagger() {
       status: 200,
       description: 'Currency deleted successfully',
       type: CurrencyResponseDto,
+    }),
+    ApiUnauthorizedResponse({
+      description: 'Unauthorized - Missing or invalid token',
+      type: ErrorListResponseDto,
+      content: {
+        'application/json': {
+          examples: {
+            NoToken: {
+              summary: 'Authorization header missing',
+              value: { errors: [{ message: 'No token provided' }] },
+            },
+            InvalidToken: {
+              summary: 'Token malformed or expired',
+              value: { errors: [{ message: 'Invalid or expired token' }] },
+            },
+          },
+        },
+      },
+    }),
+    ApiForbiddenResponse({
+      description: 'Forbidden - Insufficient role (requires SYSTEM_ADMIN)',
+      type: ErrorListResponseDto,
+      content: {
+        'application/json': {
+          examples: {
+            Forbidden: {
+              summary: 'User does not have SYSTEM_ADMIN role',
+              value: { errors: [{ message: 'Forbidden' }] },
+            },
+          },
+        },
+      },
     }),
     ApiResponse({
       status: 404,

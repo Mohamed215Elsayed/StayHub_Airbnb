@@ -1,12 +1,17 @@
 import { applyDecorators } from '@nestjs/common';
-import { ApiBody, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { ApiBody, ApiHeader, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { RefreshTokenDto } from '../dto/refresh-token.dto';
 
 export const RefreshTokenSwagger = applyDecorators(
   ApiOperation({
     summary: 'Refresh access token',
     description:
-      'Generate a new access token using a valid refresh token. The old refresh token is rotated (revoked) and a new one is issued.',
+      'Generate a new access token using a valid refresh token. The old refresh token is rotated (revoked) and a new one is issued. Sets a new refresh token as an HttpOnly cookie.',
+  }),
+  ApiHeader({
+    name: 'user-agent',
+    description: 'Client user agent string (for security logging)',
+    required: false,
   }),
   ApiResponse({
     status: 200,

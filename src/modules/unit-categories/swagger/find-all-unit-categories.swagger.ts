@@ -9,10 +9,41 @@ export function FindAllUnitCategoriesSwagger() {
       summary: 'Get all unit categories',
     }),
 
-    ApiQuery({ name: 'page', required: false, type: Number }),
-    ApiQuery({ name: 'limit', required: false, type: Number }),
-    ApiQuery({ name: 'name', required: false, type: String }),
-    ApiResponse({ status: 200, type: [UnitCategoryResponseDto] }),
+    ApiQuery({
+      name: 'page',
+      required: false,
+      type: Number,
+      description: 'Page number (1-based). Defaults to 1.',
+    }),
+    ApiQuery({
+      name: 'limit',
+      required: false,
+      type: Number,
+      description: 'Number of items per page. Defaults to 10.',
+    }),
+    ApiQuery({
+      name: 'name',
+      required: false,
+      type: String,
+      description: 'Filter by unit category name.',
+    }),
+    ApiQuery({
+      name: 'icon',
+      required: false,
+      type: String,
+      description: 'Filter by icon.',
+    }),
+    ApiQuery({
+      name: 'ignoreLimit',
+      required: false,
+      type: Boolean,
+      description: 'When true, ignores the limit and returns all results.',
+    }),
+    ApiResponse({
+      status: 200,
+      description: 'Unit categories retrieved successfully',
+      type: [UnitCategoryResponseDto],
+    }),
     ApiResponse({
       status: 400,
       type: ErrorListResponseDto,

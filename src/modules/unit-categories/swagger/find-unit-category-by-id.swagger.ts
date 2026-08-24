@@ -8,7 +8,12 @@ export function FindUnitCategoryByIdSwagger() {
     ApiOperation({
       summary: 'Get unit category by ID',
     }),
-    ApiParam({ name: 'id', type: String }),
+    ApiParam({
+      name: 'id',
+      description: 'Unit Category MongoDB ID',
+      type: String,
+      example: '60d21b4967d0d8992e610c85',
+    }),
     ApiResponse({ status: 200, type: UnitCategoryResponseDto }),
     ApiResponse({
       status: 404,

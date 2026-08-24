@@ -1,5 +1,5 @@
 import { applyDecorators } from '@nestjs/common';
-import { ApiBody, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { ApiBody, ApiHeader, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { LoginAuthDto } from '../dto/login-auth.dto';
 import { AuthResponseDto } from '../dto/auth-response.dto';
 
@@ -7,7 +7,12 @@ export const LoginSwagger = applyDecorators(
   ApiOperation({
     summary: 'Login user and return JWT access token',
     description:
-      'Authenticate user with email and password, returns access and refresh tokens',
+      'Authenticate user with email and password, returns access and refresh tokens. Sets a refresh token as an HttpOnly cookie.',
+  }),
+  ApiHeader({
+    name: 'user-agent',
+    description: 'Client user agent string (for security logging)',
+    required: false,
   }),
   ApiResponse({
     status: 200,

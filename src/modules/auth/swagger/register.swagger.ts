@@ -1,5 +1,5 @@
 import { applyDecorators } from '@nestjs/common';
-import { ApiBody, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { ApiBody, ApiHeader, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { RegisterAuthDto } from '../dto/register-auth.dto';
 import { AuthResponseDto } from '../dto/auth-response.dto';
 import { ErrorListResponseDto } from '@common/error-handling/dto/error-response.dto';
@@ -7,7 +7,13 @@ import { ErrorListResponseDto } from '@common/error-handling/dto/error-response.
 export const RegisterSwagger = applyDecorators(
   ApiOperation({
     summary: 'Register a new user',
-    description: 'Register a new user and receive access and refresh tokens',
+    description:
+      'Register a new user and receive access and refresh tokens. Sets a refresh token as an HttpOnly cookie.',
+  }),
+  ApiHeader({
+    name: 'user-agent',
+    description: 'Client user agent string (for security logging)',
+    required: false,
   }),
   ApiResponse({
     status: 201,
@@ -17,7 +23,7 @@ export const RegisterSwagger = applyDecorators(
   ApiResponse({
     status: 400,
     description: 'Bad Request - Validation or business logic errors',
-    // type: ErrorListResponseDto,
+    type: ErrorListResponseDto,
     content: {
       'application/json': {
         schema: {
@@ -76,7 +82,6 @@ export const RegisterSwagger = applyDecorators(
   ApiResponse({
     status: 500,
     description: 'Internal server error',
-    // type: ErrorListResponseDto,
     schema: {
       type: 'object',
       properties: {
@@ -100,7 +105,6 @@ export const RegisterSwagger = applyDecorators(
   ApiResponse({
     status: 409,
     description: 'Conflict - Email or phone number already exists',
-    // type: ErrorListResponseDto,
     content: {
       'application/json': {
         examples: {

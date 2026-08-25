@@ -44,6 +44,7 @@ export class SwaggerConfig {
       )
       .addTag(API_TAGS.APP_SETTINGS, 'Application settings (admin only)')
       .addTag(API_TAGS.SYSTEM_ADMINS, 'System administrator operations')
+     .addTag(API_TAGS.MAIL, '')
       .addBearerAuth(
         {
           type: 'http',

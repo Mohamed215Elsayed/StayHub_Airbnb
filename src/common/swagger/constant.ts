@@ -7,4 +7,5 @@ export enum API_TAGS {
   UNIT_CATEGORIES = 'UnitCategories',
   APP_SETTINGS = 'AppSettings',
   SYSTEM_ADMINS = 'SystemAdmins',
+  MAIL = 'Mail',
 }

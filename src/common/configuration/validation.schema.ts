@@ -21,6 +21,9 @@ export const validationSchema = Joi.object({
     .default(Environment.Development),
   PORT: Joi.number().default(3001),
   fallbackLanguage: Joi.string().default('ar'),
+  LOG_LEVEL: Joi.string()
+    .valid('fatal', 'error', 'warn', 'info', 'debug', 'trace', 'silent')
+    .default('debug'),
   MONGO_URI: Joi.string().required().messages({
     'any.required': 'MONGO_URI is required',
   }),
@@ -51,4 +54,11 @@ export const validationSchema = Joi.object({
     'any.required': 'SYSTEM_ADMIN_PASSWORD is required',
     'string.min': 'SYSTEM_ADMIN_PASSWORD must be at least 8 characters long',
   }),
+  SMTP_HOST: Joi.string().required(),
+  SMTP_PORT: Joi.number().required(),
+  SMTP_SECURE: Joi.boolean().required(),
+  SMTP_SERVICE: Joi.string().optional().allow('').default(''),
+  SMTP_FROM: Joi.string().optional().allow('').default(''),
+  SMTP_AUTH_EMAIL: Joi.string().optional().allow('').default(''),
+  SMTP_AUTH_PASS: Joi.string().optional().allow('').default(''),
 });

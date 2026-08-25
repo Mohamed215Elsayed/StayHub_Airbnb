@@ -3,9 +3,16 @@ services:
     image: mongo:8.3
     container_name: Stayhub_MongoDB
     ports:
-      - "27018:27017"
+      - '27018:27017'
     volumes:
       - mongodb_data:/data/db
+
+  mailpit:
+    image: axllent/mailpit:v1.31
+    container_name: mailpit
+    ports:
+      - 1025:1025
+      - 8025:8025
 
 volumes:
   mongodb_data:

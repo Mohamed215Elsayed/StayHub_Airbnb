@@ -1,0 +1,4 @@
+{
+  "EMAIL_SEND_FAILED": "Failed to send email.",
+  "RECIPIENT_REQUIRED": "Email recipient (to) is required."
+}

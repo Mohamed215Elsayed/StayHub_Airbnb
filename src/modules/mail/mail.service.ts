@@ -21,7 +21,7 @@ export class MailService {
       await this.emailAdapter.sendEmail(dto);
     } catch (e) {
       this.logger.error('Failed to send email', e);
-      throw new CustomBadRequestException('Failed to send email');
+      throw new CustomBadRequestException('mail.EMAIL_SEND_FAILED');
     }
   }
 

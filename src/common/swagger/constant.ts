@@ -8,4 +8,5 @@ export enum API_TAGS {
   APP_SETTINGS = 'AppSettings',
   SYSTEM_ADMINS = 'SystemAdmins',
   MAIL = 'Mail',
+  OTP = 'OTP',
 }

@@ -12,6 +12,7 @@ import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from '@modules/auth/guards/jwt-auth.guard';
 import { RolesGuard } from '@modules/auth/guards/roles.guard';
 import { MailModule } from './modules/mail/mail.module';
+import { OtpModule } from '@modules/otp/otp.module';
 
 @Module({
   imports: [
@@ -25,10 +26,11 @@ import { MailModule } from './modules/mail/mail.module';
     AppSettingsModule,
     SystemAdminsModule,
     MailModule,
+    OtpModule
   ],
   providers: [
     { provide: APP_GUARD, useClass: JwtAuthGuard },
     { provide: APP_GUARD, useClass: RolesGuard },
   ],
 })
-export class AppModule {}
+export class AppModule { }

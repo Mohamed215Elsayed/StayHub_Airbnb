@@ -1,0 +1,168 @@
+<svg width="1440" height="1180" viewBox="0 0 1440 1180" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+        <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto" markerUnits="strokeWidth">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#2563eb" />
+        </marker>
+        <style>
+            .title { font: 700 34px Arial, sans-serif; fill: #111827; }
+            .subtitle { font: 400 18px Arial, sans-serif; fill: #4b5563; }
+            .section-title { font: 700 22px Arial, sans-serif; fill: #111827; }
+            .label { font: 700 15px Arial, sans-serif; fill: #374151; }
+            .body { font: 400 15px Arial, sans-serif; fill: #374151; }
+            .small { font: 400 13px Arial, sans-serif; fill: #4b5563; }
+            .code { font: 400 13px "Courier New", monospace; fill: #1f2937; }
+            .endpoint { font: 700 14px "Courier New", monospace; fill: #1d4ed8; }
+            .box { fill: #ffffff; stroke: #d1d5db; stroke-width: 2; rx: 18; }
+            .screen { fill: #f9fafb; stroke: #9ca3af; stroke-width: 2; rx: 22; }
+            .input { fill: #ffffff; stroke: #cbd5e1; stroke-width: 1.5; rx: 10; }
+            .button { fill: #2563eb; rx: 10; }
+            .button-text { font: 700 14px Arial, sans-serif; fill: #ffffff; }
+            .note { fill: #eff6ff; stroke: #bfdbfe; stroke-width: 1.5; rx: 14; }
+            .error { fill: #fff7ed; stroke: #fed7aa; stroke-width: 1.5; rx: 14; }
+            .success { fill: #ecfdf5; stroke: #a7f3d0; stroke-width: 1.5; rx: 14; }
+            .arrow { stroke: #2563eb; stroke-width: 3; marker-end: url(#arrow); }
+            .muted-line { stroke: #cbd5e1; stroke-width: 2; }
+        </style>
+    </defs>
+
+    <rect width="1440" height="1180" fill="#f3f4f6" />
+
+    <text x="72" y="72" class="title">Register With OTP UX Cycle Wireframe</text>
+    <text x="72" y="104" class="subtitle">OTP is used before registration. The user verifies the email first, then signup is allowed.</text>
+
+    <rect x="72" y="140" width="1296" height="90" class="note" />
+    <text x="96" y="172" class="section-title">User Goal</text>
+    <text x="96" y="202" class="body">The user wants to create a new account. The system verifies the email by OTP before creating the user record.</text>
+
+    <!-- Screen 1 -->
+    <rect x="72" y="280" width="350" height="430" class="screen" />
+    <text x="104" y="324" class="section-title">1. Enter Email</text>
+    <text x="104" y="352" class="small">User starts registration by email.</text>
+
+    <text x="104" y="402" class="label">Email</text>
+    <rect x="104" y="416" width="286" height="48" class="input" />
+    <text x="124" y="446" class="small">student@example.com</text>
+
+    <rect x="104" y="498" width="286" height="50" class="button" />
+    <text x="210" y="529" class="button-text">Send OTP</text>
+
+    <line x1="104" y1="590" x2="390" y2="590" class="muted-line" />
+    <text x="104" y="624" class="endpoint">POST /otp/send</text>
+    <text x="104" y="654" class="body">Input: { email }</text>
+    <text x="104" y="682" class="body">Output: no body, success status</text>
+
+    <!-- Backend 1 -->
+    <rect x="472" y="280" width="300" height="430" class="box" />
+    <text x="500" y="324" class="section-title">Send OTP Action</text>
+    <text x="500" y="360" class="body">1. Check if OTP is already</text>
+    <text x="520" y="388" class="body">verified for this email.</text>
+    <text x="500" y="418" class="body">2. If a user already exists,</text>
+    <text x="520" y="446" class="body">reject the request.</text>
+    <text x="500" y="476" class="body">3. Generate 6 digit code.</text>
+    <text x="500" y="506" class="body">4. Save code and expire date.</text>
+    <text x="500" y="536" class="body">5. Send code by email.</text>
+
+    <rect x="500" y="590" width="244" height="82" class="success" />
+    <text x="524" y="620" class="label">OTP Record</text>
+    <text x="524" y="648" class="code">{ email, code, expireDate }</text>
+
+    <!-- Mailpit -->
+    <rect x="472" y="760" width="300" height="120" class="note" />
+    <text x="500" y="802" class="section-title">Mailpit Inbox</text>
+    <text x="500" y="834" class="body">Open: http://localhost:8025</text>
+    <text x="500" y="862" class="body">Email subject: email verification</text>
+
+    <!-- Screen 2 -->
+    <rect x="822" y="280" width="300" height="430" class="screen" />
+    <text x="850" y="324" class="section-title">2. Verify Email</text>
+    <text x="850" y="352" class="small">User copies the OTP from email.</text>
+
+    <text x="850" y="402" class="label">Email</text>
+    <rect x="850" y="416" width="244" height="46" class="input" />
+    <text x="868" y="445" class="small">student@example.com</text>
+
+    <text x="850" y="494" class="label">Code</text>
+    <rect x="850" y="508" width="244" height="46" class="input" />
+    <text x="868" y="537" class="small">123456</text>
+
+    <rect x="850" y="586" width="244" height="50" class="button" />
+    <text x="916" y="617" class="button-text">Verify Email</text>
+
+    <text x="850" y="674" class="endpoint">POST /otp/verify</text>
+    <text x="850" y="702" class="body">Input: { email, code }</text>
+
+    <!-- Backend 2 -->
+    <rect x="1172" y="280" width="196" height="430" class="box" />
+    <text x="1194" y="324" class="section-title">Verify Action</text>
+    <text x="1194" y="360" class="body">1. Find OTP.</text>
+    <text x="1194" y="390" class="body">2. Reject if</text>
+    <text x="1214" y="418" class="body">already verified.</text>
+    <text x="1194" y="448" class="body">3. Reject if</text>
+    <text x="1214" y="476" class="body">expired.</text>
+    <text x="1194" y="506" class="body">4. Compare code.</text>
+    <text x="1194" y="536" class="body">5. Set</text>
+    <text x="1214" y="564" class="code">verified: true</text>
+    <rect x="1194" y="612" width="148" height="54" class="success" />
+    <text x="1214" y="645" class="label">Email verified</text>
+
+    <!-- Screen 3 -->
+    <rect x="72" y="760" width="350" height="330" class="screen" />
+    <text x="104" y="802" class="section-title">3. Complete Signup</text>
+    <text x="104" y="830" class="small">User fills the register form.</text>
+
+    <text x="104" y="872" class="label">Name</text>
+    <rect x="104" y="886" width="286" height="38" class="input" />
+    <text x="124" y="910" class="small">John Doe</text>
+
+    <text x="104" y="950" class="label">Email</text>
+    <rect x="104" y="964" width="286" height="38" class="input" />
+    <text x="124" y="988" class="small">student@example.com</text>
+
+    <text x="104" y="1028" class="label">Password, phone, country, image</text>
+    <rect x="104" y="1042" width="286" height="38" class="input" />
+    <text x="124" y="1066" class="small">registration data</text>
+
+    <rect x="104" y="1110" width="286" height="48" class="button" />
+    <text x="210" y="1140" class="button-text">Sign Up</text>
+
+    <!-- Signup backend -->
+    <rect x="472" y="930" width="300" height="210" class="box" />
+    <text x="500" y="972" class="section-title">Signup Action</text>
+    <text x="500" y="1008" class="endpoint">POST /auth/sign-up</text>
+    <text x="500" y="1038" class="body">1. Auth calls SignupUseCase.</text>
+    <text x="500" y="1068" class="body">2. UsersService creates user.</text>
+    <text x="500" y="1098" class="body">3. User validation checks OTP:</text>
+    <text x="520" y="1126" class="code">checkIfEmailVerified(email)</text>
+
+    <!-- Final backend -->
+    <rect x="822" y="930" width="300" height="210" class="box" />
+    <text x="850" y="972" class="section-title">Create Account</text>
+    <text x="850" y="1008" class="body">1. Reject if email is not verified.</text>
+    <text x="850" y="1038" class="body">2. Check email and phone are unique.</text>
+    <text x="850" y="1068" class="body">3. Hash password.</text>
+    <text x="850" y="1098" class="body">4. Create user and statistics.</text>
+    <text x="850" y="1128" class="body">5. Return user and tokens.</text>
+
+    <!-- Error lane -->
+    <rect x="1172" y="760" width="196" height="310" class="error" />
+    <text x="1194" y="802" class="section-title">Error Cases</text>
+    <text x="1194" y="838" class="body">- Email already</text>
+    <text x="1214" y="866" class="body">used.</text>
+    <text x="1194" y="896" class="body">- Wrong OTP.</text>
+    <text x="1194" y="926" class="body">- Expired OTP.</text>
+    <text x="1194" y="956" class="body">- Signup before</text>
+    <text x="1214" y="984" class="body">verification.</text>
+    <text x="1194" y="1014" class="body">- Duplicate phone.</text>
+
+    <!-- Arrows -->
+    <line x1="422" y1="495" x2="468" y2="495" class="arrow" />
+    <line x1="772" y1="495" x2="818" y2="495" class="arrow" />
+    <line x1="1122" y1="495" x2="1168" y2="495" class="arrow" />
+    <line x1="622" y1="710" x2="622" y2="754" class="arrow" />
+    <path d="M622 880 C622 910 430 910 426 925" class="arrow" />
+    <line x1="422" y1="1035" x2="468" y2="1035" class="arrow" />
+    <line x1="772" y1="1035" x2="818" y2="1035" class="arrow" />
+
+    <!-- Footer -->
+    <text x="72" y="1168" class="small">Teaching order: OTP verifies the email first. Registration then uses that verified OTP record to allow account creation.</text>
+</svg>

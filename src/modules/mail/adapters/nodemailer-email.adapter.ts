@@ -3,6 +3,7 @@ import type { EmailAdapterInterface } from "../interfaces/email-adapter.interfac
 import { SendEmailDto } from "../dto/send-email.dto";
 import { ConfigService } from "@nestjs/config";
 import { EnvironmentVariables, ISmtp } from "@common/configuration/environment.interface";
+import { CustomBadRequestException } from "@common/error-handling/custom-exceptions/bad-request.exception";
 import * as nodemailer from "nodemailer";
 
 const FALLBACK_FROM = '"StayHub" <no-reply@stayhub.com>';
@@ -42,7 +43,7 @@ export class NodemailerEmailAdapter
 
   async sendEmail(dto: SendEmailDto): Promise<void> {
     if (!dto.to) {
-      throw new Error("Email recipient (to) is required");
+      throw new CustomBadRequestException('mail.RECIPIENT_REQUIRED');
     }
 
     const from = dto.from?.trim() || this.defaultFrom;

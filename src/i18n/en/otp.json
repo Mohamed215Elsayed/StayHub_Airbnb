@@ -1,0 +1,7 @@
+{
+  "EMAIL_ALREADY_VERIFIED": "Email already verified.",
+  "OTP_NOT_FOUND": "No OTP found for this email.",
+  "INVALID_OTP": "Invalid OTP code.",
+  "OTP_EXPIRED": "OTP has expired.",
+  "OTP_ALREADY_VERIFIED": "OTP already verified."
+}

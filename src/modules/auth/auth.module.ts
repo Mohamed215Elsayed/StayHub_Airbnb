@@ -21,6 +21,7 @@ import { RefreshTokenRepository } from './repository/refresh-token.repository';
 import { LoginAsUserUsecase } from './use-cases/login-as-user.usecase';
 import { LoginAsSystemAdminUsecase } from './use-cases/login-as-system-admin.usecase';
 import { SystemAdminsModule } from '@modules/system-admins/system-admins.module';
+import { OtpModule } from '@modules/otp/otp.module';
 
 @Module({
   controllers: [AuthController],
@@ -43,6 +44,7 @@ import { SystemAdminsModule } from '@modules/system-admins/system-admins.module'
     CoreModule,
     UsersModule,
     SystemAdminsModule,
+    OtpModule,
     JwtModule.registerAsync({
       imports: [ConfigModule],
       useFactory: (configService: ConfigService<EnvironmentVariables>) =>
@@ -62,4 +64,4 @@ import { SystemAdminsModule } from '@modules/system-admins/system-admins.module'
     ]),
   ],
 })
-export class AuthModule {}
+export class AuthModule { }

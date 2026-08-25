@@ -8,12 +8,16 @@ import { ForgetPasswordService } from './forget-password.service';
 import { SendForgetPasswordOtpUseCase } from './usecases/send-forget-password-otp.usecase';
 import { VerifyForgetPasswordOtpUseCase } from './usecases/verify-forget-password-otp.usecase';
 import { ResetPasswordUseCase } from './usecases/reset-password.usecase';
+import { UsersModule } from '@modules/users/users.module';
+import { MailModule } from '@modules/mail/mail.module';
 
 @Module({
   imports: [
     MongooseModule.forFeature([
       { name: ModelNames.FORGET_PASSWORD, schema: ForgetPasswordSchema },
     ]),
+    UsersModule,
+    MailModule,
   ],
   controllers: [ForgetPasswordController],
   providers: [

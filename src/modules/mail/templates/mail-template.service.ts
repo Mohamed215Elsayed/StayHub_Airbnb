@@ -33,11 +33,13 @@ const TEMPLATES: Record<MailTemplate, TemplateMeta> = {
   },
   [MailTemplate.BOOKING_CANCELLATION]: {
     file: 'booking-cancellation-template.html',
-    subject: (c) => `Your booking was cancelled – ${str(c.propertyTitle, 'your stay')}`,
+    subject: (c) =>
+      `Your booking was cancelled – ${str(c.propertyTitle, 'your stay')}`,
   },
   [MailTemplate.BOOKING_REMINDER]: {
     file: 'booking-reminder-template.html',
-    subject: (c) => `Reminder: your stay at ${str(c.propertyTitle, 'StayHub')} starts soon`,
+    subject: (c) =>
+      `Reminder: your stay at ${str(c.propertyTitle, 'StayHub')} starts soon`,
   },
 };
 
@@ -52,7 +54,10 @@ export class MailTemplateService {
   private readonly logger = new Logger(MailTemplateService.name);
   private readonly cache = new Map<string, string>();
 
-  render(template: MailTemplate, context: Record<string, unknown>): RenderedMail {
+  render(
+    template: MailTemplate,
+    context: Record<string, unknown>,
+  ): RenderedMail {
     const meta = TEMPLATES[template];
     if (!meta) {
       throw new Error(`Unknown mail template: ${template}`);
@@ -69,7 +74,9 @@ export class MailTemplateService {
     };
   }
 
-  private withDefaults(context: Record<string, unknown>): Record<string, unknown> {
+  private withDefaults(
+    context: Record<string, unknown>,
+  ): Record<string, unknown> {
     return {
       appName: DEFAULT_APP_NAME,
       year: new Date().getFullYear(),

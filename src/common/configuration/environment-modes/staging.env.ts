@@ -17,13 +17,15 @@ export const stagingEnv = (): EnvironmentVariables => ({
     port: Number(process.env.SMTP_PORT ?? 587),
     secure: process.env.SMTP_SECURE === 'true',
     service: process.env.SMTP_SERVICE ?? '',
-    from: process.env.SMTP_FROM ?? '"StayHub Staging" <no-reply@staging.stayhub.com>',
+    from:
+      process.env.SMTP_FROM ??
+      '"StayHub Staging" <no-reply@staging.stayhub.com>',
     auth:
       process.env.SMTP_AUTH_EMAIL && process.env.SMTP_AUTH_PASS
         ? {
-          user: process.env.SMTP_AUTH_EMAIL,
-          pass: process.env.SMTP_AUTH_PASS,
-        }
+            user: process.env.SMTP_AUTH_EMAIL,
+            pass: process.env.SMTP_AUTH_PASS,
+          }
         : undefined,
   },
 });

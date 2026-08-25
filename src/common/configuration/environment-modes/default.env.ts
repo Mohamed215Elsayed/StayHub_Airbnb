@@ -24,9 +24,9 @@ export const defaultEnv = (): EnvironmentVariables => ({
     auth:
       process.env.SMTP_AUTH_EMAIL && process.env.SMTP_AUTH_PASS
         ? {
-          user: process.env.SMTP_AUTH_EMAIL,
-          pass: process.env.SMTP_AUTH_PASS,
-        }
+            user: process.env.SMTP_AUTH_EMAIL,
+            pass: process.env.SMTP_AUTH_PASS,
+          }
         : undefined,
   },
 });

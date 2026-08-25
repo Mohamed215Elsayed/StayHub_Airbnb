@@ -7,5 +7,6 @@ export enum ModelNames {
   UNIT_CATEGORIES = 'unit-categories',
   APP_SETTINGS = 'app-settings',
   SYSTEM_ADMINS = 'system-admins',
-  OTP = 'otp'
+  OTP = 'otp',
+  FORGET_PASSWORD = 'forget-password',
 }

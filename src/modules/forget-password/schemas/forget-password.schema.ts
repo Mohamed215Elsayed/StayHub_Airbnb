@@ -1,7 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
 @Schema({ timestamps: true })
-export class Otp {
+export class ForgetPassword {
   @Prop({ required: true })
   email!: string;
 
@@ -14,4 +14,6 @@ export class Otp {
   @Prop({ required: true, default: false })
   isVerified!: boolean;
 }
-export const OtpSchema = SchemaFactory.createForClass(Otp);
+
+export const ForgetPasswordSchema =
+  SchemaFactory.createForClass(ForgetPassword);

@@ -1,10 +1,13 @@
-import { Injectable, Logger, OnModuleInit } from "@nestjs/common";
-import type { EmailAdapterInterface } from "../interfaces/email-adapter.interface";
-import { SendEmailDto } from "../dto/send-email.dto";
-import { ConfigService } from "@nestjs/config";
-import { EnvironmentVariables, ISmtp } from "@common/configuration/environment.interface";
-import { CustomBadRequestException } from "@common/error-handling/custom-exceptions/bad-request.exception";
-import * as nodemailer from "nodemailer";
+import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
+import type { EmailAdapterInterface } from '../interfaces/email-adapter.interface';
+import { SendEmailDto } from '../dto/send-email.dto';
+import { ConfigService } from '@nestjs/config';
+import {
+  EnvironmentVariables,
+  ISmtp,
+} from '@common/configuration/environment.interface';
+import { CustomBadRequestException } from '@common/error-handling/custom-exceptions/bad-request.exception';
+import * as nodemailer from 'nodemailer';
 
 const FALLBACK_FROM = '"StayHub" <no-reply@stayhub.com>';
 
@@ -21,7 +24,7 @@ export class NodemailerEmailAdapter
   ) {}
 
   onModuleInit(): void {
-    const smtp = this.configService.getOrThrow<ISmtp>("SMTP");
+    const smtp = this.configService.getOrThrow<ISmtp>('SMTP');
 
     this.defaultFrom = smtp.from?.trim() || FALLBACK_FROM;
 
@@ -61,7 +64,7 @@ export class NodemailerEmailAdapter
 
       if (info.rejected.length > 0) {
         this.logger.warn(
-          `Some recipients were rejected: ${info.rejected.join(", ")}`,
+          `Some recipients were rejected: ${info.rejected.join(', ')}`,
         );
       }
     } catch (err) {
@@ -76,7 +79,7 @@ export class NodemailerEmailAdapter
   private async verifyConnection(): Promise<void> {
     try {
       await this.transporter.verify();
-      this.logger.log("SMTP server is ready to take our messages");
+      this.logger.log('SMTP server is ready to take our messages');
     } catch (err) {
       this.logger.warn(
         `SMTP connection verification failed: ${(err as Error)?.message}`,

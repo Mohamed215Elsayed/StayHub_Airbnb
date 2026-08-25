@@ -15,14 +15,13 @@ export class RegisterUsecase {
     private readonly usersService: UsersService,
     private readonly generateTokensAndSaveUsecase: GenerateTokensAndSaveUsecase,
     private readonly otpService: OtpService,
-  ) { }
+  ) {}
 
   async execute(
     registerAuthDto: RegisterAuthDto,
     ipAddress?: string,
     userAgent?: string,
   ): Promise<AuthResponseDto> {
-
     await this.assertEmailVerified(registerAuthDto.email);
 
     const user = await this.usersService.create(registerAuthDto);

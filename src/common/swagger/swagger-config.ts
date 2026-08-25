@@ -12,13 +12,13 @@ export class SwaggerConfig {
       .setTitle('StayHub Airbnb Clone API')
       .setDescription(
         'RESTful API for the StayHub Airbnb Clone application.\n\n' +
-        '**Authentication**\n' +
-        'Most endpoints require a Bearer JWT access token. Include it in the `Authorization` ' +
-        'header as `Bearer <accessToken>`. Public endpoints are marked accordingly.\n\n' +
-        '**Rate Limiting**\n' +
-        'API usage may be rate-limited. Please respect throttling limits.\n\n' +
-        '**Internationalization**\n' +
-        'Error messages can be localized via the `x-lang` header or `lang` query parameter.',
+          '**Authentication**\n' +
+          'Most endpoints require a Bearer JWT access token. Include it in the `Authorization` ' +
+          'header as `Bearer <accessToken>`. Public endpoints are marked accordingly.\n\n' +
+          '**Rate Limiting**\n' +
+          'API usage may be rate-limited. Please respect throttling limits.\n\n' +
+          '**Internationalization**\n' +
+          'Error messages can be localized via the `x-lang` header or `lang` query parameter.',
       )
       .setVersion('1.0')
       .setContact('StayHub Team', 'https://stayhub.dev', 'contact@stayhub.dev')
@@ -51,6 +51,10 @@ export class SwaggerConfig {
       .addTag(
         API_TAGS.OTP,
         'One-time password operations: generate, send, and verify OTP codes for authentication, email verification, and password reset flows.',
+      )
+      .addTag(
+        API_TAGS.FORGET_PASSWORD,
+        'Forget password operations: send OTP, verify OTP, and reset password',
       )
       .addBearerAuth(
         {

@@ -48,8 +48,10 @@ This is not a small CRUD demo — it's a real API with authentication, role-base
 - Save and manage favorite units
 
 ### OTP & Email
-- OTP generation, storage, sending, and verification
+- OTP generation, storage, sending, and verification (`/otp`)
+- Registration is gated behind a verified OTP
 - Mail adapter pattern with Nodemailer support
+- Reusable, StayHub-branded HTML email templates (OTP, welcome, password reset, email verification, booking confirmation/cancellation/reminder)
 - Mailpit for local email testing
 
 ### Infrastructure
@@ -82,8 +84,8 @@ src/
 │   ├── bookings/           → Availability, booking requests, reviews
 │   ├── unit-favorites/     → Favorite units
 │   ├── files-upload/       → Storage abstraction and upload use cases
-│   ├── mail/               → Email adapter abstraction
-│   ├── otp/                → OTP generation, storage, sending
+│   ├── mail/               → Email adapter abstraction + templates
+│   ├── otp/                → OTP generation, storage, sending, verification
 │   ├── system-admins/      → Admin bootstrap and management
 │   ├── countries/          → Country reference data
 │   ├── cities/             → City reference data
@@ -102,12 +104,16 @@ src/
 │   │   ├── auth.json
 │   │   ├── user.json
 │   │   ├── error.json
-│   │   └── validation.json
+│   │   ├── validation.json
+│   │   ├── otp.json
+│   │   └── mail.json
 │   └── ar/
 │       ├── auth.json
 │       ├── user.json
 │       ├── error.json
-│       └── validation.json
+│       ├── validation.json
+│       ├── otp.json
+│       └── mail.json
 ├── core.module.ts          → Core module (I18n, Mongoose, Config)
 ├── app.module.ts           → Root application module
 └── main.ts                 → Application bootstrap
@@ -234,10 +240,24 @@ pnpm run start:dev
 |--------|----------|-------------|
 | POST | `/system-admins/login` | System admin login |
 
+### OTP
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/otp/send` | Send an OTP to the given email |
+| POST | `/otp/verify` | Verify an OTP code |
+
+### Mail
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/mail/send` | Send a raw email (text/HTML) |
+| POST | `/mail/send-template` | Render and send a StayHub email template |
+
 ### Swagger Documentation
 
 ```
-http://localhost:3000/api/docs
+http://localhost:3001/api/docs
 ```
 
 ---
@@ -265,7 +285,7 @@ pnpm run docker:rs:init:local
 ### Environment Variables
 
 ```env
-PORT=3000
+PORT=3001
 NODE_ENV=development
 MONGO_URI=mongodb://localhost:27017/airbnbDB
 JWT_SECRET=themostsecretkey
@@ -282,6 +302,8 @@ MINIO_S3_ENDPOINT=http://localhost:9000
 SMTP_HOST=localhost
 SMTP_PORT=1025
 SMTP_SECURE=false
+SMTP_SERVICE=
+SMTP_FROM="StayHub" <no-reply@stayhub.com>
 SMTP_AUTH_EMAIL=
 SMTP_AUTH_PASS=
 ```
@@ -312,12 +334,16 @@ src/i18n/
 │   ├── auth.json      → Auth DTO validation messages
 │   ├── user.json      → User DTO validation messages
 │   ├── error.json     → Business error messages
-│   └── validation.json → Generic validation messages
+│   ├── validation.json → Generic validation messages
+│   ├── otp.json       → OTP error messages
+│   └── mail.json      → Mail error messages
 └── ar/
     ├── auth.json
     ├── user.json
     ├── error.json
-    └── validation.json
+    ├── validation.json
+    ├── otp.json
+    └── mail.json
 ```
 
 ### i18n Flow
@@ -414,60 +440,39 @@ Available collections:
 - Bookings
 - Favorites
 - OTP
+- Mail
 
 ---
 
-## 📚 Course Roadmap
+## 📖 Module Guides
 
-The project is organized so students can build feature by feature:
+Deeper documentation lives in each module's `md/` folder:
 
-1. Project setup, configuration, validation, and global structure
-2. MongoDB connection and reusable repository pattern
-3. Users and secure password hashing
-4. Authentication with access tokens and refresh tokens
-5. Guards, decorators, role-based authorization, and public routes
-6. System admin bootstrap and admin login
-7. Countries, cities, currencies, unit categories, and app settings
-8. Unit creation, update, listing, filtering, and ownership checks
-9. File upload validation and S3-compatible storage with MinIO
-10. Unit photos, activation, deactivation, and soft delete
-11. Booking availability and booking price calculation
-12. Booking requests, guest updates, cancellation, and host status changes
-13. Reviews and unit rating updates
-14. Favorite units
-15. Mail adapter pattern and Nodemailer integration
-16. OTP send and verify flow
-17. Forgot password module using OTP and email
-18. Swagger documentation, API collections, testing, and production notes
+- **Mail Service Integration** — `src/modules/mail/md/MAIL_SERVICE_INTEGRATION.md`
+  Adapter pattern, Nodemailer transporter, SMTP/Mailpit setup, and the `EMAIL_ADAPTER` injection token.
+- **Use Case Architecture Pattern** — `src/modules/auth/md/use-case-arch-pattern-guide.md`
+  How controllers delegate to services, which delegate to focused use cases and repositories.
+- **Refresh Token Guide** — `src/modules/auth/md/refresh-token-guide.md`
+  Why refresh tokens are used, DB-stored vs stateless approaches, and lifecycle diagrams.
+- **System Admin Login Flow** — `src/modules/system-admins/md/system-admin-login-flow.md`
+  Sequence diagram and process for system-admin authentication.
 
 ---
 
-## 🎓 Who This Course Is For
+## 💡 Highlights
 
-- Backend students who know JavaScript or TypeScript and want to build real APIs
-- NestJS beginners who want a complete project instead of scattered examples
-- Node.js developers who want to learn clean architecture in practice
-- Developers preparing for backend interviews or freelance API work
-- Instructors and teams who want a structured project for learning NestJS
-
----
-
-## 💡 What Makes This Different
-
-Many backend courses stop at simple CRUD. This project goes further.
-
-Students learn how real backend features connect together:
+Many backend tutorials stop at simple CRUD. This project goes further by connecting real features end to end:
 
 - Authentication is connected to role guards and current-user decorators
 - Units are connected to owners, files, categories, currencies, bookings, reviews, and favorites
 - Bookings are connected to availability validation, business rules, host actions, guest actions, and reviews
-- Email and OTP are prepared for real account flows such as forgot password
+- Email and OTP are wired for real account flows such as forgot password
 - Infrastructure is not ignored: MongoDB, object storage, and email testing run locally with Docker
 
-The goal is not only to learn NestJS syntax. The goal is to learn how to think, structure, debug, and extend a backend project.
+The focus is not only on NestJS syntax, but on how to think, structure, debug, and extend a backend project.
 
 ---
 
 ## 📄 License
 
-This project is provided as course material. Check the course terms before redistributing or reusing it outside the learning context.
+This project is licensed under the MIT License.

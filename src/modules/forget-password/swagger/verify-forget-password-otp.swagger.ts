@@ -1,16 +1,18 @@
 import { applyDecorators } from '@nestjs/common';
 import { ApiBody, ApiOperation, ApiResponse } from '@nestjs/swagger';
-import { VerifyOtpDto } from '../dtos/verify-otp.dto';
+import { VerifyForgetPasswordOtpDto } from '../dtos/verify-forget-password-otp.dto';
 import { ErrorListResponseDto } from '@common/error-handling/dto/error-response.dto';
 
-export function VerifyOtpSwagger() {
+export function VerifyForgetPasswordOtpSwagger() {
   return applyDecorators(
     ApiOperation({
-      summary: 'Verify an OTP code',
-      description:
-        'Validate the OTP code previously sent to the email address.',
+      summary: 'Verify a forget-password OTP code',
+      description: 'Validate the OTP code previously sent for password reset.',
     }),
-    ApiResponse({ status: 204, description: 'OTP verified successfully' }),
+    ApiResponse({
+      status: 204,
+      description: 'Forget-password OTP verified successfully',
+    }),
     ApiResponse({
       status: 400,
       description: 'Bad Request - Validation errors',
@@ -36,6 +38,6 @@ export function VerifyOtpSwagger() {
       description: 'Internal server error',
       type: ErrorListResponseDto,
     }),
-    ApiBody({ type: VerifyOtpDto }),
+    ApiBody({ type: VerifyForgetPasswordOtpDto }),
   );
 }

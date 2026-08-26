@@ -8,6 +8,7 @@ import { ForgetPasswordService } from './forget-password.service';
 import { SendForgetPasswordOtpUseCase } from './usecases/send-forget-password-otp.usecase';
 import { VerifyForgetPasswordOtpUseCase } from './usecases/verify-forget-password-otp.usecase';
 import { ResetPasswordUseCase } from './usecases/reset-password.usecase';
+import { FindForgetPasswordRawUsecase } from './usecases/find-forget-password-raw.usecase';
 import { UsersModule } from '@modules/users/users.module';
 import { MailModule } from '@modules/mail/mail.module';
 
@@ -25,7 +26,8 @@ import { MailModule } from '@modules/mail/mail.module';
     ForgetPasswordService,
     SendForgetPasswordOtpUseCase,
     VerifyForgetPasswordOtpUseCase,
-    ResetPasswordUseCase
+    ResetPasswordUseCase,
+    FindForgetPasswordRawUsecase,
   ],
 })
-export class ForgetPasswordModule { }
+export class ForgetPasswordModule {}

@@ -266,7 +266,7 @@ http://localhost:3001/api/docs
 
 | Service | Port | URL |
 |---------|------|-----|
-| MongoDB | 27017 | `mongodb://localhost:27017/airbnbDB` |
+| MongoDB | 27018 | `mongodb://localhost:27018/airbnbDB?replicaSet=rs0` |
 | MinIO API | 9000 | `http://localhost:9000` |
 | MinIO Console | 9001 | `http://localhost:9001` |
 | Mailpit SMTP | 1025 | `localhost:1025` |
@@ -287,7 +287,7 @@ pnpm run docker:rs:init:local
 ```env
 PORT=3001
 NODE_ENV=development
-MONGO_URI=mongodb://localhost:27017/airbnbDB
+MONGO_URI=mongodb://localhost:27018/airbnbDB?replicaSet=rs0
 JWT_SECRET=themostsecretkey
 
 SYSTEM_ADMIN_EMAIL=admin@airbnb.com

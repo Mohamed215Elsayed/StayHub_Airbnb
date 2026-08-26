@@ -2,6 +2,7 @@ services:
   mongodb:
     image: mongo:8.3
     container_name: Stayhub_MongoDB
+    command: ["mongod", "--replSet", "rs0", "--bind_ip_all"]
     ports:
       - '27018:27017'
     volumes:

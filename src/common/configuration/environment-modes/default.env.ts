@@ -6,7 +6,7 @@ export const defaultEnv = (): EnvironmentVariables => ({
   PORT: parseInt(process.env.PORT ?? '3001', 10),
   fallbackLanguage: process.env.fallbackLanguage ?? 'ar',
   LOG_LEVEL: process.env.LOG_LEVEL ?? 'debug',
-  MONGO_URI: process.env.MONGO_URI ?? 'mongodb://localhost:27018/airbnbDB',
+  MONGO_URI: process.env.MONGO_URI ?? 'mongodb://localhost:27018/airbnbDB?replicaSet=rs0',
   JWT_SECRET: process.env.JWT_SECRET ?? 'JWT_SECRET',
   ACCESS_TOKEN_EXPIRE_IN: process.env.ACCESS_TOKEN_EXPIRE_IN ?? '7d',
   REFRESH_TOKEN_EXPIRE_IN: process.env.REFRESH_TOKEN_EXPIRE_IN ?? '30d',

@@ -48,7 +48,9 @@ describe('MailTemplateService', () => {
     const result = service.render(MailTemplate.WELCOME, {
       loginUrl: 'http://stayhub.test/login?next=home&x=1',
     });
-    expect(result.html).toContain('http://stayhub.test/login?next=home&amp;x=1');
+    expect(result.html).toContain(
+      'http://stayhub.test/login?next=home&amp;x=1',
+    );
   });
 
   it('replaces missing placeholders with empty string', () => {
@@ -58,8 +60,6 @@ describe('MailTemplateService', () => {
   });
 
   it('throws on an unknown template type', () => {
-    expect(() =>
-      service.render('nope' as MailTemplate, {}),
-    ).toThrow();
+    expect(() => service.render('nope' as MailTemplate, {})).toThrow();
   });
 });

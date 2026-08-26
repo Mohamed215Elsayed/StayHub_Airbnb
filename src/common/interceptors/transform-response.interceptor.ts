@@ -26,8 +26,14 @@ export interface ApiResponse<T = unknown> {
  * - anything else         → `{ data }`
  */
 @Injectable()
-export class TransformResponseInterceptor implements NestInterceptor<unknown, ApiResponse<unknown>> {
-  intercept(context: ExecutionContext, next: CallHandler): Observable<ApiResponse<unknown>> {
+export class TransformResponseInterceptor implements NestInterceptor<
+  unknown,
+  ApiResponse<unknown>
+> {
+  intercept(
+    context: ExecutionContext,
+    next: CallHandler,
+  ): Observable<ApiResponse<unknown>> {
     return next.handle().pipe(map((response) => this.normalize(response)));
   }
 

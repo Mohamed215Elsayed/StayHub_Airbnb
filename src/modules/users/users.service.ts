@@ -5,15 +5,17 @@ import { UserResponseDto } from './dto/user-response.dto';
 import { CustomNotFoundException } from '@common/error-handling/custom-exceptions/not-found.exception';
 import { CreateUserUseCase } from './use-cases/create-user.usecase';
 import { UserRepository } from './repository/user.repository';
-import { QueryFilter } from 'mongoose';
+import { ClientSession, QueryFilter } from 'mongoose';
 import { plainToInstance } from 'class-transformer';
 import { User } from './schemas/user.schema';
+import { UpdateUserRawUsecase } from './use-cases/update-user-raw.usecase';
 
 @Injectable()
 export class UsersService {
   constructor(
     private readonly userRepository: UserRepository,
     private readonly createUserUseCase: CreateUserUseCase,
+    private readonly updateUserRawUsecase: UpdateUserRawUsecase,
   ) {}
 
   /**
@@ -34,6 +36,14 @@ export class UsersService {
     createUserDto: CreateUserDto | RegisterAuthDto,
   ): Promise<UserResponseDto> {
     return this.createUserUseCase.execute(createUserDto);
+  }
+
+  async updateUserRaw(
+    filter: QueryFilter<User>,
+    update: Record<string, any>,
+    session?: ClientSession,
+  ): Promise<User | null> {
+    return this.updateUserRawUsecase.execute(filter, update, session);
   }
 
   async findOne(query: QueryFilter<User>): Promise<UserResponseDto | null> {

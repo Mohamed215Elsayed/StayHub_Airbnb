@@ -7,7 +7,8 @@ export function VerifyOtpSwagger() {
   return applyDecorators(
     ApiOperation({
       summary: 'Verify an OTP code',
-      description: 'Validate the OTP code previously sent to the email address.',
+      description:
+        'Validate the OTP code previously sent to the email address.',
     }),
     ApiResponse({ status: 204, description: 'OTP verified successfully' }),
     ApiResponse({

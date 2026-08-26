@@ -11,7 +11,7 @@ import { SendOtpSwagger, VerifyOtpSwagger } from './swagger';
 @Controller('otp')
 @Public()
 export class OtpController {
-  constructor(private readonly otpService: OtpService) { }
+  constructor(private readonly otpService: OtpService) {}
 
   // TODO: Add rate limiter
   @SendOtpSwagger()

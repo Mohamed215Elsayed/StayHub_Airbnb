@@ -1,9 +1,5 @@
 import { applyDecorators } from '@nestjs/common';
-import {
-  ApiBody,
-  ApiOperation,
-  ApiResponse,
-} from '@nestjs/swagger';
+import { ApiBody, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { SendEmailDto } from '../dto/send-email.dto';
 import { SendTemplatedEmailDto } from '../dto/send-templated-email.dto';
 import { ErrorListResponseDto } from '@common/error-handling/dto/error-response.dto';

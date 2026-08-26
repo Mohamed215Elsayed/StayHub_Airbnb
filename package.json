@@ -21,6 +21,7 @@
     "docker:up": "docker-compose up -d",
     "docker:down": "docker-compose down",
     "docker:down:rm": "docker-compose down -v",
+    "docker:rs:init:local": "docker exec -it Stayhub_MongoDB mongosh --eval \"try { rs.status(); cfg=rs.conf(); cfg.members[0].host='host.docker.internal:27018'; rs.reconfig(cfg,{force:true}); } catch (e) { rs.initiate({_id: 'rs0', members: [{_id: 0, host: 'host.docker.internal:27018'}]}); }\"",
     "docker:logs": "docker-compose logs -f"
   },
   "dependencies": {

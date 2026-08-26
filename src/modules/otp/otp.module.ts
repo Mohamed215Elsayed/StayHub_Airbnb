@@ -17,8 +17,14 @@ import { FindOtpRawUsecase } from './usecases/find-otp-raw.usecase';
     MailModule,
     UsersModule,
   ],
-  providers: [OtpRepository, OtpService, SendOtpUseCase, VerifyOtpUseCase, FindOtpRawUsecase],
+  providers: [
+    OtpRepository,
+    OtpService,
+    SendOtpUseCase,
+    VerifyOtpUseCase,
+    FindOtpRawUsecase,
+  ],
   controllers: [OtpController],
   exports: [OtpService],
 })
-export class OtpModule { }
+export class OtpModule {}

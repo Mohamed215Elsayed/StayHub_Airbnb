@@ -13,6 +13,7 @@ import { JwtAuthGuard } from '@modules/auth/guards/jwt-auth.guard';
 import { RolesGuard } from '@modules/auth/guards/roles.guard';
 import { MailModule } from './modules/mail/mail.module';
 import { OtpModule } from '@modules/otp/otp.module';
+import { ForgetPasswordModule } from '@modules/forget-password/forget-password.module';
 
 @Module({
   imports: [
@@ -26,11 +27,12 @@ import { OtpModule } from '@modules/otp/otp.module';
     AppSettingsModule,
     SystemAdminsModule,
     MailModule,
-    OtpModule
+    OtpModule,
+    ForgetPasswordModule,
   ],
   providers: [
     { provide: APP_GUARD, useClass: JwtAuthGuard },
     { provide: APP_GUARD, useClass: RolesGuard },
   ],
 })
-export class AppModule { }
+export class AppModule {}

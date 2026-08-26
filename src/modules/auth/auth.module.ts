@@ -64,4 +64,4 @@ import { OtpModule } from '@modules/otp/otp.module';
     ]),
   ],
 })
-export class AuthModule { }
+export class AuthModule {}

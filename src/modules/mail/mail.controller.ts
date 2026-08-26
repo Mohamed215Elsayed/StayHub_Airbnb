@@ -22,9 +22,7 @@ export class MailController {
   @SendTemplatedEmailSwagger()
   @Public()
   @Post('/send-template')
-  async sendTemplatedEmail(
-    @Body() dto: SendTemplatedEmailDto,
-  ): Promise<void> {
+  async sendTemplatedEmail(@Body() dto: SendTemplatedEmailDto): Promise<void> {
     await this.mailService.sendTemplatedEmail(dto);
   }
 }
